@@ -6,8 +6,8 @@
                 "${workspaceFolder}/**",
                 "C:\\Program Files\\MySQL\\MySQL Server 8.0\\include",
                 "C:\\Program Files\\MySQL\\MySQL Server 8.0\\lib",
-                "${workspaceFolder}/UI",
-                "${workspaceFolder}/module"
+                "C:\\Users\\BOSS\\Desktop\\CS\\utem\\y2sem1\\workshop1\\fromMac\\srms\\srms\\module",
+                "C:\\Users\\BOSS\\Desktop\\CS\\utem\\y2sem1\\workshop1\\fromMac\\srms\\srms\\UI"
             ],
             "defines": [
                 "_DEBUG",
