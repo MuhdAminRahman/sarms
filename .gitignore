@@ -1,3 +1,6 @@
 /.vscode
 .dll
 .exe
+libmysql.dll
+.vscode/c_cpp_properties.json
+.vscode/settings.json
