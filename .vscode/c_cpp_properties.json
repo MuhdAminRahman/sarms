@@ -5,7 +5,9 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:\\Program Files\\MySQL\\MySQL Server 8.0\\include",
-                "C:\\Program Files\\MySQL\\MySQL Server 8.0\\lib"
+                "C:\\Program Files\\MySQL\\MySQL Server 8.0\\lib",
+                "${workspaceFolder}/UI",
+                "${workspaceFolder}/module"
             ],
             "defines": [
                 "_DEBUG",

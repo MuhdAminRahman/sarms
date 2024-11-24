@@ -8,6 +8,8 @@
                 "-IC:\\Program Files\\MySQL\\MySQL Server 8.0\\include",
                 "-LC:\\Program Files\\MySQL\\MySQL Server 8.0\\lib",
                 "C:\\Program Files\\MySQL\\MySQL Server 8.0\\lib\\libmysql.dll",
+                "-IC:\\Users\\BOSS\\Desktop\\CS\\utem\\y2sem1\\workshop1\\SARMS\\UI",
+                "-IC:\\Users\\BOSS\\Desktop\\CS\\utem\\y2sem1\\workshop1\\SARMS\\module",
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
