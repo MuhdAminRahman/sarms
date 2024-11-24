@@ -1,3 +1,5 @@
 .vscode/
 *.dll
 *.exe
+.vscode/c_cpp_properties.json
+sarms.exe
