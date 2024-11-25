@@ -3,3 +3,7 @@
 *.exe
 .vscode/c_cpp_properties.json
 sarms.exe
+sarms.dSYM/Contents/Info.plist
+sarms.dSYM/Contents/Resources/Relocations/aarch64/sarms.yml
+sarms.dSYM/Contents/Resources/DWARF/sarms
+sarms
