@@ -10,6 +10,8 @@ class sarmsdb
         int qstate;
         bool checkflag;
 
+        string id;
+
 
     public:
         sarmsdb();
@@ -18,8 +20,10 @@ class sarmsdb
         void closedb();
         void queryDB(string query);
         bool verifyLogin(string username,string password,string &role);
-        void addUser(string username,string password,string role);
+        void addUser(string username,string password,string role,string name, string phoneno,string dob, string address, string designation);
         void addAdmin(string name,string phoneno, string address);
+        void setID();
+        void setParentID();
         void printQuery();
 };
 #endif
@@ -86,9 +90,24 @@ bool sarmsdb::verifyLogin(string username,string password,string &role){
     return false;
 }
 
-void sarmsdb::addUser(string username,string password, string role){
-    string query = "INSERT INTO USERACCOUNTS(name,password,role) VALUES ('"+username+"','"+password+"','"+role+"')";
+void sarmsdb::addUser(string username,string password, string role,string name, string phoneno, string dob, string address, string designation){
+    string query = "INSERT INTO useraccounts(name,password,role) VALUES ('"+username+"','"+password+"','"+role+"')";
     queryDB(query);
+    string query2;
+    if(role == "Admin" || role == "Teacher")
+    {
+        query2 = "INSERT INTO staff(Name,PhoneNo,Designation,UserID) VALUES ('" + name + "','" + phoneno + "','" + designation + "',LAST_INSERT_ID())";
+    }
+    else if (role == "Parent")
+    {
+        query2 = "INSERT INTO parent(Name,PhoneNo,UserID) VALUES ('" + name + "','" + phoneno + "',LAST_INSERT_ID())";
+    }
+    else if (role == "Student")
+    {
+        query2 = "INSERT INTO student(Name,PhoneNo,dob,address,UserID) VALUES ('" + name + "','" + phoneno + "','" + dob + "','"  + address + "',LAST_INSERT_ID())";
+    }
+    
+    
     closedb();
 }
 

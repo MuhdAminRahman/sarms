@@ -4,7 +4,7 @@
 #include <limits>
 using namespace std;
 #include "sarmsUI.h"
-#include "sarmsdb.h"
+#include "sarmsDB.h"
 #include "sarmsUser.h"
 #include "sarmsAdmin.h"
 

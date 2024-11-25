@@ -70,7 +70,9 @@ void sarmsAdmin::Registration(){
     try
     {
         int choice;
-        string newusername,newpassword,newname,newphoneno,newaddress,role="Admin";
+        string username,password,role;;
+        string name,phoneno,dob,address;
+        string designation;
         do
         {
             clearScreen();
@@ -80,16 +82,18 @@ void sarmsAdmin::Registration(){
             {
             case 1:
                 cout << "New Admin Username: ";
-                cin >> newusername;
+                cin >> username;
                 cout << "\n Password : ";
-                cin >> newpassword;
-                /*cout << "\nAdmin name : ";
-                cin >> newname;
+                cin >> password;
+                cout << "\nRole(Admin/Teacher/Parent/Student): ";
+                cin >> role;
+                cout << "\nAdmin name : ";
+                cin >> name;
                 cout << "\nPhone number : ";
-                cin >> newphoneno;
-                cout << "\nAddress : ";
-                cin >> newaddress;*/
-                db.addUser(newusername,newpassword,role);
+                cin >> phoneno;
+                cout << "\nDesignation : ";
+                cin >> designation;
+                db.addUser(username,password,role,name,phoneno,dob,address,designation);
                 break;
             case 2:
                 //placeholder
