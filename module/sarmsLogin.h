@@ -1,5 +1,6 @@
+#ifndef SARMSLOGIN_H
+#define SARMSLOGIN_H
 #include "sarmsUser.h"
-
 
 class sarmsLogin
 {
@@ -9,7 +10,7 @@ public:
     ~sarmsLogin();
     void loginHandler();
 };
-
+#endif
 sarmsLogin::sarmsLogin(){}
 
 sarmsLogin::~sarmsLogin(){}
