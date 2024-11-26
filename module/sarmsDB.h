@@ -9,6 +9,7 @@ private:
     MYSQL_ROW row;
     MYSQL_RES *result;
     int numfields;
+    string id;
 
     struct Node
     {
@@ -29,11 +30,16 @@ public:
     void connectdb();
     void closedb();
     void queryDB(string query);
+
     bool verifyLogin(string username, string password, string &role);
+
     void addUser(string username, string password, string role, string name, string phoneno, string dob, string address, string designation);
     void retrieveAllUser();
-    void addAdmin(string name, string phoneno, string address);
-    void setID();
+    void retrieveUser(string username);
+    void deleteUser();
+    void updateUser();
+
+    void setID(string setid);
     void setParentID();
     void printQuery();
 };
@@ -144,10 +150,10 @@ void sarmsdb::retrieveAllUser(){
         while((row = mysql_fetch_row(result))){
             for(int i = 0;i<numfields;i++){
                 if(row[i]){
-                    cout << "| " << setw(17) << left << row[i] << " |" << endl;
+                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
                 }
                 else{
-                    cout << "| " << setw(17) << left << "NULL" << " |" << endl;
+                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
                 }
             }
         }
@@ -159,6 +165,22 @@ void sarmsdb::retrieveAllUser(){
         mysql_free_result(result);
         cerr << "Error retrieving data : " << mysql_error(conn) << endl;
     }
+}
+
+void sarmsdb::retrieveUser(string username){
+    string query = "select UserID from useraccounts where Username = '";
+}
+
+void sarmsdb::deleteUser(){
+
+}
+
+void sarmsdb::updateUser(){
+
+}
+
+void sarmsdb::setID(string setid){
+    id = setid;
 }
 
 void sarmsdb::printQuery()
