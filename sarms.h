@@ -2,7 +2,14 @@
 #include <string>
 #include <mysql.h>
 #include <limits>
-#include <conio.h>
+
+#ifdef _WIN32
+#include <conio.h>  // Windows-specific
+#else
+#include <termios.h>
+#include <unistd.h>  // Unix-specific
+#endif
+
 using namespace std;
 #include "sarmsUI.h"
 #include "sarmsDB.h"
@@ -133,10 +140,41 @@ void sarms::Login(){
 }
 
 void sarms::getPassword(){
+    
     char ch;
+#ifdef _WIN32
+    
     password = "";
-    while ((ch = _getch()) != '\r') { // '\r' is Enter
+    while ((ch = getch()) != '\r') { // '\r' is Enter
         password.push_back(ch);
         cout << '*'; // Mask the input
     }
+#else
+    struct termios oldt, newt;
+    tcgetattr(STDIN_FILENO, &oldt);  // Get current terminal settings
+    newt = oldt;
+    newt.c_lflag &= ~(ECHO);  // Disable echoing of characters
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);  // Apply new settings
+    
+    cout << "Enter your password: ";
+    
+    while (true) {
+        ch = getchar();  // Unix: getchar() hides the input
+        if (ch == '\n' || ch == '\r') {  // Enter key
+            break;
+        } else if (ch == 127) {  // Backspace
+            if (password.length() > 0) {
+                password.pop_back();
+                cout << "\b \b";  // Erase character from console
+            }
+        } else {
+            password += ch;
+            cout << '*';  // Mask input with asterisks
+        }
+    }
+    cout << endl;
+    
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);  // Restore original terminal settings
+#endif
+
 }
