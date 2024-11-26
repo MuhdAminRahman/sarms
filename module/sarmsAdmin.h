@@ -4,14 +4,15 @@
 class sarmsAdmin
 {
 private:
-    sarmsUI ui;
-    sarmsdb db;
+    sarmsUI* uiA;
+    sarmsdb* dbA;
 public:
-    sarmsAdmin(/* args */);
+    sarmsAdmin(sarmsdb &db,sarmsUI &ui);
     ~sarmsAdmin();
     void checkCin();
     void clearScreen();
     void Registration();
+    void registerAdmin();
 };
 #endif
 
@@ -26,19 +27,21 @@ void sarmsAdmin::clearScreen()
 
 void sarmsAdmin::checkCin()
 {
-    cout << "\nPlease follow the instruction for input.\n";
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
-sarmsAdmin::sarmsAdmin(/* args */){
+sarmsAdmin::sarmsAdmin(sarmsdb& db,sarmsUI& ui)
+{
+    uiA = new sarmsUI(ui);
+    dbA = new sarmsdb(db);
     try
     {
         int choice;
         do
         {
             clearScreen();
-            ui.printAdminPage();
+            uiA->printAdminPage();
             cin >> choice;
 
             switch (choice)
@@ -53,62 +56,68 @@ sarmsAdmin::sarmsAdmin(/* args */){
                 cout << "Please insert the number shown above.\n";
                 break;
             }
-            
-        } while (choice !=2 );
-        
+
+        } while (choice != 2);
     }
-    catch(const exception e)
+    catch (const exception e)
     {
         cerr << e.what() << '\n';
     }
 }
 
-sarmsAdmin::~sarmsAdmin(){
+sarmsAdmin::~sarmsAdmin()
+{
 }
 
-void sarmsAdmin::Registration(){
+void sarmsAdmin::Registration()
+{
     try
     {
         int choice;
-        string username,password,role;;
-        string name,phoneno,dob,address;
-        string designation;
+
         do
         {
             clearScreen();
-            ui.printAdminRegistration();
+            uiA->printAdminRegistration();
+            dbA->retrieveAllUser();
             cin >> choice;
-            switch(choice)
+            switch (choice)
             {
             case 1:
-                cout << "New Admin Username: ";
-                cin >> username;
-                cout << "\n Password : ";
-                cin >> password;
-                cout << "\nRole(Admin/Teacher/Parent/Student): ";
-                cin >> role;
-                cout << "\nAdmin name : ";
-                cin >> name;
-                cout << "\nPhone number : ";
-                cin >> phoneno;
-                cout << "\nDesignation : ";
-                cin >> designation;
-                db.addUser(username,password,role,name,phoneno,dob,address,designation);
+                registerAdmin();
                 break;
             case 2:
-                //placeholder
+                // placeholder
                 break;
             default:
                 cout << "Please insert the number shown above.\n";
                 break;
             }
-            
-        } while (choice !=2 );
-        
+
+        } while (choice != 2);
     }
-    catch(const exception e)
+    catch (const exception e)
     {
         cerr << e.what() << '\n';
     }
-    
+}
+
+void sarmsAdmin::registerAdmin()
+{
+    string username, password;
+    string name, phoneno;
+    string designation;
+    int choice;
+    cout << "Username: ";
+    checkCin();
+    getline(cin,username);
+    cout << "\n Password : ";
+    getline(cin,password);
+    cout << "\nAdmin Full name : ";
+    getline(cin,name);
+    cout << "\nPhone number : ";
+    getline(cin,phoneno);
+    cout << "\nDesignation : ";
+    getline(cin,designation);
+    dbA->addUser(username, password, "Admin", name, phoneno, "NULL", "NULL", designation);
 }

@@ -34,15 +34,8 @@ void sarmsUser::addUser(string username,string password,string role){
 void sarmsUser::deleteUser(){}
 void sarmsUser::retrieveUser(){
     string query = "SELECT FROM USERACCOUNTS(name,password)";
-    db.connectdb();
     db.queryDB(query);
     db.closedb();
 }
 
 void sarmsUser::updateUser(){}
-bool sarmsUser::isUser(string name, string password,string &role){
-    db.connectdb();
-    verifyFlag = db.verifyLogin(name,password,role);
-    db.closedb();
-    return verifyFlag;
-}
