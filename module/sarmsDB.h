@@ -29,17 +29,18 @@ public:
     ~sarmsdb();
     void connectdb();
     void closedb();
-    void queryDB(string query);
+    void queryDB(string &query);
 
-    bool verifyLogin(string username, string password, string &role);
+    bool verifyLogin(string &username, string &password, string &role);
+    bool checkUsername(string &username);
 
     void addUser(string username, string password, string role, string name, string phoneno, string dob, string address, string designation);
     void retrieveAllUser();
-    void retrieveUser(string username);
+    void retrieveUser(string &username);
     void deleteUser();
     void updateUser();
 
-    void setID(string setid);
+    void setID(string &setid);
     void setParentID();
     void printQuery();
 };
@@ -77,7 +78,7 @@ void sarmsdb::closedb()
     }
 }
 
-void sarmsdb::queryDB(string query)
+void sarmsdb::queryDB(string &query)
 {
     try
     {
@@ -96,7 +97,7 @@ void sarmsdb::queryDB(string query)
         cerr << e.what() << '\n';
     }
 }
-bool sarmsdb::verifyLogin(string username, string password, string &role)
+bool sarmsdb::verifyLogin(string &username, string &password, string &role)
 {
     string query = "SELECT role FROM USERACCOUNTS WHERE Username = '" + username + "' AND Password = '" + password + "'";
     queryDB(query);
@@ -112,6 +113,24 @@ bool sarmsdb::verifyLogin(string username, string password, string &role)
         }
         mysql_free_result(result);
     }
+    mysql_free_result(result);
+    return false;
+}
+
+bool sarmsdb::checkUsername(string &username){
+    string query = "SELECT Username FROM useraccounts(Username) WHERE Username = '" + username + "'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if (result)
+    {
+        if (mysql_num_rows(result) > 0)
+        {
+            mysql_free_result(result);
+            return true;
+        }
+        mysql_free_result(result);
+    }
+    mysql_free_result(result);
     return false;
 }
 
@@ -129,10 +148,12 @@ void sarmsdb::addUser(string username, string password, string role, string name
     else if (role == "Parent")
     {
         query2 = "INSERT INTO parent(Name,PhoneNo,UserID) VALUES ('" + name + "','" + phoneno + "',LAST_INSERT_ID())";
+        queryDB(query2);
     }
     else if (role == "Student")
     {
         query2 = "INSERT INTO student(Name,PhoneNo,dob,address,UserID) VALUES ('" + name + "','" + phoneno + "','" + dob + "','" + address + "',LAST_INSERT_ID())";
+        queryDB(query2);
     }
     
 }
@@ -167,7 +188,7 @@ void sarmsdb::retrieveAllUser(){
     }
 }
 
-void sarmsdb::retrieveUser(string username){
+void sarmsdb::retrieveUser(string &username){
     string query = "select UserID from useraccounts where Username = '";
 }
 
@@ -179,7 +200,7 @@ void sarmsdb::updateUser(){
 
 }
 
-void sarmsdb::setID(string setid){
+void sarmsdb::setID(string &setid){
     id = setid;
 }
 

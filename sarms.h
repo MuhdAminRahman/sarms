@@ -57,41 +57,49 @@ void sarms::checkCin()
 
 sarms::sarms()
 {
-
-    do
+    try
     {
-        clearScreen();
-        frontPage();
-        db.connectdb();
-        loginFlag = db.verifyLogin(username, password, role);
-        if (loginFlag)
+        do
         {
-            if (role == "Admin")
+            clearScreen();
+            frontPage();
+            db.connectdb();
+            loginFlag = db.verifyLogin(username, password, role);
+            if (loginFlag)
             {
-                sarmsAdmin admin(db,ui);
-                
+                if (role == "Admin")
+                {
+                    sarmsAdmin admin(db,ui);
+                    
+                }
+                else if (role == "Teacher")
+                {
+                    // sarmsTeacher teacher;
+                }
+                else if (role == "Parent")
+                {
+                    // sarmsParent parent;
+                }
+                else if (role == "Student")
+                {
+                    // sarmsStudent student;
+                }
+                db.closedb();
             }
-            if (role == "Teacher")
+            else
             {
-                // sarmsTeacher teacher;
-            }
-            if (role == "Parent")
-            {
-                // sarmsParent parent;
-            }
-            if (role == "Student")
-            {
-                // sarmsStudent student;
-            }
-            db.closedb();
-        }
-        else
-        {
-            cout << "\nUser does not exist, please try logging again or contact your admin.";
+                cout << "\nUser does not exist, please try logging again or contact your admin.";
 
-        }
-        
-    } while (true);
+            }
+            
+        } while (true);
+    }
+    catch(const exception& e)
+    {
+        cerr << e.what() << '\n';
+    }
+    
+    
 }
 
 sarms::~sarms()

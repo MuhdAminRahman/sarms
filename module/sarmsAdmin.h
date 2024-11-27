@@ -11,8 +11,12 @@ public:
     ~sarmsAdmin();
     void checkCin();
     void clearScreen();
+
     void Registration();
     void registerAdmin();
+    void registerTeacher();
+    void registerParent();
+    void registerStudent();
 };
 #endif
 
@@ -108,16 +112,27 @@ void sarmsAdmin::registerAdmin()
     string name, phoneno;
     string designation;
     int choice;
-    cout << "Username: ";
     checkCin();
-    getline(cin,username);
-    cout << "\n Password : ";
-    getline(cin,password);
-    cout << "\nAdmin Full name : ";
-    getline(cin,name);
-    cout << "\nPhone number : ";
-    getline(cin,phoneno);
-    cout << "\nDesignation : ";
-    getline(cin,designation);
+    
+    cout << "Username: ";           getline(cin,username);
+    while(dbA->checkUsername(username)){
+        cout << "\nUsername is already taken please insert a new one: ";
+        getline(cin,username);
+    }
+    cout << "\n Password : ";       getline(cin,password);
+    cout << "\nAdmin Full name : "; getline(cin,name);
+    cout << "\nPhone number : ";    getline(cin,phoneno);
+    cout << "\nDesignation : ";     getline(cin,designation);
     dbA->addUser(username, password, "Admin", name, phoneno, "NULL", "NULL", designation);
+}
+
+void sarmsAdmin::registerTeacher(){
+
+}
+
+void sarmsAdmin::registerParent(){
+
+}
+void sarmsAdmin::registerStudent(){
+
 }
