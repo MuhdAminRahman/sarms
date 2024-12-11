@@ -22,8 +22,6 @@ private:
     int qstate;
     bool checkflag;
 
-    string id;
-
 public:
     sarmsdb();
     ~sarmsdb();
@@ -35,10 +33,18 @@ public:
     bool checkUsername(string &username);
 
     void addUser(string username, string password, string role, string name, string phoneno, string dob, string address, string designation);
+
     void retrieveAllUser();
-    void retrieveUser(string &username);
-    void deleteUser();
-    void updateUser();
+    void retrieveAdmin();
+    void retrieveTeacher();
+    void retrieveParent();
+    void retrieveStudent();
+    void retrieveUserID(string &username,string &UserID);
+
+
+    void deleteUser(string username);
+
+    void updateUser(string UserID);
 
     void setID(string &setid);
     void setParentID();
@@ -99,7 +105,7 @@ void sarmsdb::queryDB(string &query)
 }
 bool sarmsdb::verifyLogin(string &username, string &password, string &role)
 {
-    string query = "SELECT role FROM USERACCOUNTS WHERE Username = '" + username + "' AND Password = '" + password + "'";
+    string query = "SELECT role FROM useraccounts WHERE Username = '" + username + "' AND Password = '" + password + "'";
     queryDB(query);
     result = mysql_store_result(conn);
     if (result)
@@ -111,14 +117,16 @@ bool sarmsdb::verifyLogin(string &username, string &password, string &role)
             mysql_free_result(result);
             return true;
         }
-        mysql_free_result(result);
+        else{
+            mysql_free_result(result);
+        }
+        
     }
-    mysql_free_result(result);
     return false;
 }
 
 bool sarmsdb::checkUsername(string &username){
-    string query = "SELECT Username FROM useraccounts(Username) WHERE Username = '" + username + "'";
+    string query = "SELECT Username FROM useraccounts WHERE Username = '" + username + "'";
     queryDB(query);
     result = mysql_store_result(conn);
     if (result)
@@ -128,9 +136,12 @@ bool sarmsdb::checkUsername(string &username){
             mysql_free_result(result);
             return true;
         }
-        mysql_free_result(result);
+        else
+        {
+            mysql_free_result(result);
+            return false;
+        }  
     }
-    mysql_free_result(result);
     return false;
 }
 
@@ -183,20 +194,142 @@ void sarmsdb::retrieveAllUser(){
     }
     else
     {
-        mysql_free_result(result);
         cerr << "Error retrieving data : " << mysql_error(conn) << endl;
     }
 }
 
-void sarmsdb::retrieveUser(string &username){
-    string query = "select UserID from useraccounts where Username = '";
+void sarmsdb::retrieveAdmin(){
+    string query = "SELECT * FROM useraccounts JOIN staff using (UserID) where Role = 'Admin'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
+    {
+        numfields = mysql_num_fields(result);
+        cout << "+-------------------+" << endl;
+        cout << "| Username          |" << endl;
+        cout << "+-------------------+" << endl;
+        while((row = mysql_fetch_row(result))){
+            for(int i = 0;i<numfields;i++){
+                if(row[i]){
+                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
+                }
+                else{
+                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
+                }
+            }
+        }
+        mysql_free_result(result);
+        cout << "+-------------------+" << endl;
+    }
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
+}
+void sarmsdb::retrieveTeacher(){
+    string query = "SELECT * FROM useraccounts JOIN staff using (UserID) where Role = 'Teacher'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
+    {
+        numfields = mysql_num_fields(result);
+        cout << "+-------------------+" << endl;
+        cout << "| Username          |" << endl;
+        cout << "+-------------------+" << endl;
+        while((row = mysql_fetch_row(result))){
+            for(int i = 0;i<numfields;i++){
+                if(row[i]){
+                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
+                }
+                else{
+                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
+                }
+            }
+        }
+        mysql_free_result(result);
+        cout << "+-------------------+" << endl;
+    }
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
+}
+void sarmsdb::retrieveParent(){
+    string query = "SELECT * FROM useraccounts JOIN parent using (UserID) where Role = 'Parent'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
+    {
+        numfields = mysql_num_fields(result);
+        cout << "+-------------------+" << endl;
+        cout << "| Username          |" << endl;
+        cout << "+-------------------+" << endl;
+        while((row = mysql_fetch_row(result))){
+            for(int i = 0;i<numfields;i++){
+                if(row[i]){
+                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
+                }
+                else{
+                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
+                }
+            }
+        }
+        mysql_free_result(result);
+        cout << "+-------------------+" << endl;
+    }
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
+}
+void sarmsdb::retrieveStudent(){
+    string query = "SELECT * FROM useraccounts JOIN student using (UserID) where Role = 'Student'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
+    {
+        numfields = mysql_num_fields(result);
+        cout << "+-------------------+" << endl;
+        cout << "| Username          |" << endl;
+        cout << "+-------------------+" << endl;
+        while((row = mysql_fetch_row(result))){
+            for(int i = 0;i<numfields;i++){
+                if(row[i]){
+                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
+                }
+                else{
+                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
+                }
+            }
+        }
+        mysql_free_result(result);
+        cout << "+-------------------+" << endl;
+    }
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
+}
+void sarmsdb::retrieveUserID(string &username,string &UserID){
+    string query = "select UserID from useraccounts where Username = '" + username +"'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result){
+        row = mysql_fetch_row(result);
+        UserID = row[0];
+        mysql_free_result(result);
+    }
 }
 
-void sarmsdb::deleteUser(){
+
+void sarmsdb::deleteUser(string UserID){
+    string query = "DELETE FROM useraccounts WHERE UserID = '" + UserID + "'";
+    queryDB(query);
 
 }
 
-void sarmsdb::updateUser(){
+void sarmsdb::updateUser(string UserID){
+    string query = "";
 
 }
 
@@ -207,7 +340,7 @@ void sarmsdb::setID(string &setid){
 void sarmsdb::printQuery()
 {
     result = mysql_store_result(conn);
-    while (row = mysql_fetch_row(result))
+    while ((row = mysql_fetch_row(result)))
     {
         cout << row[0] << row[1] << row[2] << row[3] << row[4];
     }

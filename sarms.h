@@ -61,8 +61,8 @@ sarms::sarms()
     {
         do
         {
-            clearScreen();
             frontPage();
+            clearScreen();
             db.connectdb();
             loginFlag = db.verifyLogin(username, password, role);
             if (loginFlag)
@@ -84,12 +84,12 @@ sarms::sarms()
                 {
                     // sarmsStudent student;
                 }
-                db.closedb();
+                clearScreen();
             }
             else
             {
                 cout << "\nUser does not exist, please try logging again or contact your admin.";
-
+                clearScreen();
             }
             
         } while (true);
@@ -113,7 +113,6 @@ void sarms::frontPage()
         int choice;
         do
         {
-            clearScreen();
             ui.printFrontPage();
             cin >> choice;
 
@@ -128,6 +127,7 @@ void sarms::frontPage()
             default:
                 cout << "Please insert the number shown above.\n";
                 checkCin();
+                clearScreen();
                 break;
             }
         } while (choice < 1 || choice > 2);
@@ -164,6 +164,7 @@ void sarms::getPassword(){
     newt.c_lflag &= ~(ECHO);  // Disable echoing of characters
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);  // Apply new settings
     
+    password = "";
     cout << "Enter your password: ";
     
     while (true) {
