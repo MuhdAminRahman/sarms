@@ -8,6 +8,7 @@ private:
     MYSQL *conn;
     MYSQL_ROW row;
     MYSQL_RES *result;
+    MYSQL_FIELD *fields;//for table column name
     int numfields;
     string id;
 
@@ -32,6 +33,7 @@ public:
     bool verifyLogin(string &username, string &password, string &role);
     bool checkUsername(string &username);
 
+    //AdminUserManagement
     void addUser(string username, string password, string role, string name, string phoneno, string dob, string address, string designation);
 
     void retrieveAllUser();
@@ -41,14 +43,37 @@ public:
     void retrieveStudent();
     void retrieveUserID(string &username,string &UserID);
 
-
     void deleteUser(string username);
 
     void updateUser(string UserID);
 
-    void setID(string &setid);
-    void setParentID();
-    void printQuery();
+    //AdminSubjectManagement
+    void addSubject(string name, string description);
+    void retrieveSubject();
+    void retrieveSubjectID(string name,string &SubjectID);
+    void deleteSubject(string subjectID);
+    void updateSubject();
+
+    //AdminTuitionManagement
+    void addTuitionDetails(string name,string fee);
+    void retrieveTuitionDetails();
+    void retrieveTuitionDetailsID();
+    void deleteTuitionDetails();
+    void updateTuitionDetails();
+    //AdminClassManagement
+        //Class Management
+    void addClass(string name,string StaffID);
+    void retrieveClass();
+    void retrieveClassID();
+    void deleteClass();
+    void updateClass();
+
+        //Schedule Management
+    void addSchedule(string name,string date);
+    void retrieveSchedule();
+    void retrieveScheduleID();
+    void deleteSchedule();
+    void updateSchedule();
 };
 #endif
 
@@ -328,21 +353,45 @@ void sarmsdb::deleteUser(string UserID){
 
 }
 
-void sarmsdb::updateUser(string UserID){
-    string query = "";
-
+//Subject Management
+void sarmsdb::addSubject(string name,string description){
+    string query = "INSERT INTO subject(Name,Description) VALUES ('" + name + "','"+ description+"')";
+    queryDB(query);
 }
-
-void sarmsdb::setID(string &setid){
-    id = setid;
-}
-
-void sarmsdb::printQuery()
-{
-    result = mysql_store_result(conn);
-    while ((row = mysql_fetch_row(result)))
+void sarmsdb::retrieveSubject(){
+    string query = "SELECT * FROM subject";
+    queryDB(query);
+    result=mysql_store_result(conn);
+    if(result)
     {
-        cout << row[0] << row[1] << row[2] << row[3] << row[4];
+        numfields = mysql_num_fields(result);
+        while((row = mysql_fetch_row(result))){
+            for(int i = 0;i<numfields;i++){
+                if(row[i]){
+                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
+                }
+                else{
+                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
+                }
+            }
+        }
+        mysql_free_result(result);
+        cout << "+-------------------+" << endl;
     }
-    mysql_free_result(result);
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
 }
+void sarmsdb::deleteSubject(string subjectID){
+    string query = "DELETE FROM subject WHERE SubjectID = '" + subjectID + "'";
+    queryDB(query);
+}
+
+//Tuition Management
+void sarmsdb::addTuitionDetails(string name,string fee){
+    string query = "INSERT INTO tuitiondetails(Name,Fee) VALUES ('" + name + "','"+ fee+"')";
+    queryDB(query);
+}
+
+//Class Management

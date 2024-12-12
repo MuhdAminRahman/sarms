@@ -12,32 +12,44 @@ public:
     void checkCin();
     void clearScreen();
 
-    void manageUser();
-    void deleteUser();
+    ///////////////////////////////////////////////////////////////////////
+    void manageUser();//done
+    void deleteUser();//done
 
     void manageAdmin();
-    void registerAdmin();
-    void retrieveAdmin();
+    void registerAdmin();//done
     void updateAdmin();
-    void deleteAdmin();
+    void deleteAdmin();//done
 
     void manageTeacher();
-    void registerTeacher();
-    void retrieveTeacher();
+    void registerTeacher();//done
     void updateTeacher();
-    void deleteTeacher();
+    void deleteTeacher();//done
 
     void manageParent();
-    void registerParent();
-    void retrieveParent();
+    void registerParent();//done
     void updateParent();
-    void deleteParent();
+    void deleteParent();//done
 
     void manageStudent();
-    void registerStudent();
-    void retrieveStudent();
+    void registerStudent();//done
     void updateStudent();
-    void deleteStudent();
+    void deleteStudent();//done
+    ///////////////////////////////////////////////////////////////////////
+    void manageSubjects();
+    void addSubject();
+    void deleteSubject();
+    void updateSubject();
+    ///////////////////////////////////////////////////////////////////////
+    void manageTuition();
+    void addTuition();
+    void deleteTuition();
+    void updateTuition();
+    void setStudentTuition();
+
+    ///////////////////////////////////////////////////////////////////////
+    void manageClass();
+
 
 };
 #endif
@@ -76,14 +88,23 @@ sarmsAdmin::sarmsAdmin(sarmsdb& db,sarmsUI& ui)
                 manageUser();
                 break;
             case 2:
-                //placeholder
+                manageSubjects();
+                break;
+            case 3:
+                manageTuition();
+                break;
+            case 4:
+                manageClass();
+                break;
+            case 5:
+                //Log Out
                 break;
             default:
                 cout << "Please insert the number shown above.\n";
                 break;
             }
 
-        } while (choice != 2);
+        } while (choice != 5);
     }
     catch (const exception e)
     {
@@ -361,47 +382,50 @@ void sarmsAdmin::deleteParent(){
 }
 
 void sarmsAdmin::manageStudent(){
-try
-    {
-        int choice;
-        string continue1;
-        do
+    try
         {
-            clearScreen();
-            uiA->printStudentManagement();
-            cin >> choice;
-
-            switch (choice)
+            int choice;
+            string continue1;
+            do
             {
-            case 1:
-                registerStudent();
-                break;
-            case 2:
-                //retrieve
-                dbA->retrieveStudent();
-                cout << "\n Type in anything to continue: ";
-                cin >> continue1;
-                break;
-            case 3:
-                //update
-                break;
-            case 4:
-                deleteStudent();
-                break;
-            case 5:
-                //return back
-                break;
-            default:
-                cout << "Please insert the number shown above.\n";
-                break;
-            }
+                clearScreen();
+                uiA->printStudentManagement();
+                cin >> choice;
 
-        } while (choice != 5);
-    }
-    catch (const exception e)
-    {
-        cerr << e.what() << '\n';
-    }
+                switch (choice)
+                {
+                case 1:
+                    registerStudent();
+                    break;
+                case 2:
+                    //retrieve
+                    dbA->retrieveStudent();
+                    cout << "\n Type in anything to continue: ";
+                    cin >> continue1;
+                    break;
+                case 3:
+                    //update
+                    break;
+                case 4:
+                    deleteStudent();
+                    break;
+                case 5:
+                    //set student's parent
+                    break;
+                case 6:
+                    //return back
+                    break;
+                default:
+                    cout << "Please insert the number shown above.\n";
+                    break;
+                }
+
+            } while (choice != 6);
+        }
+        catch (const exception e)
+        {
+            cerr << e.what() << '\n';
+        }
 }
 
 void sarmsAdmin::registerStudent(){
@@ -428,3 +452,58 @@ void sarmsAdmin::deleteStudent(){
     dbA->retrieveStudent();
     deleteUser();
 }
+
+void sarmsAdmin::manageSubjects(){
+    try
+    {
+        int choice;
+
+        do
+        {
+            clearScreen();
+            uiA->printAdminSubjectManagement();
+            cin >> choice;
+            switch (choice)
+            {
+            case 1:
+                addSubject();
+                break;
+            case 2:
+                dbA->retrieveSubject();
+                break;
+            case 3:
+                //deleteSubject
+                break;
+            case 4:
+                //updateSubject
+                break;
+            case 5:
+                //set Subject to Teacher
+                break;
+            case 6:
+                //return back
+                break;
+            default:
+                cout << "Please insert the number shown above.\n";
+                break;
+            }
+
+        } while (choice != 6);
+    }
+    catch (const exception e)
+    {
+        cerr << e.what() << '\n';
+    }
+}
+void sarmsAdmin::addSubject(){
+    string name,description;
+    checkCin();
+
+    cout << "\nPlease insert the name of the Subject: "; getline(cin,name);
+    cout << "\nPlease insert the description of the Subject: "; getline(cin,description);
+    dbA->addSubject(name,description);
+}
+
+void sarmsAdmin::manageTuition(){}
+
+void sarmsAdmin::manageClass(){}

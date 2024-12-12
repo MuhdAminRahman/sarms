@@ -27,9 +27,11 @@ public:
     void printParentManagement();
     void printStudentManagement();
 
-    void printAdminSubject();
-    void printAdminClassSchedule();
-    void printAdminTuition();
+    void printAdminSubjectManagement();
+    void printAdminTuitionManagement();
+    void printAdminClassManagement();
+    void printAdminManageClass();
+    void printAdminManageClassSchedule();
 
     void printTeacherPage();
     void printTeacherAssessment();
@@ -76,7 +78,10 @@ void sarmsUI::printAdminPage(){
     printBorder();
     printEmptyLine();
     printCenteredText("1.User Management");
-    printCenteredText("2.Log Out");
+    printCenteredText("2.Subject Management");
+    printCenteredText("3.Tuition Management");
+    printCenteredText("4.Class Management");
+    printCenteredText("5.Log Out");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();
     printBorder();
@@ -141,6 +146,73 @@ void sarmsUI::printStudentManagement(){
     printCenteredText("2.Student Retrieve.");
     printCenteredText("3.Student Update.");
     printCenteredText("4.Student Delete.");
+    printCenteredText("5.Set Student's Parent.");
+    printCenteredText("6.Return Back.");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+void sarmsUI::printAdminSubjectManagement(){
+    printBorder();
+    printEmptyLine();
+    printCenteredText("1.Add Subject.");
+    printCenteredText("2.Retrieve All Subjects.");
+    printCenteredText("3.Update Subject.");
+    printCenteredText("4.Delete Subject.");
+    printCenteredText("5.Set Teacher to Subject.");
+    printCenteredText("6.Return Back.");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+void sarmsUI::printAdminTuitionManagement(){
+    printBorder();
+    printEmptyLine();
+    printCenteredText("1.Add Tuition.");
+    printCenteredText("2.Retrieve All Tuitions.");
+    printCenteredText("3.Update Tuition.");
+    printCenteredText("4.Delete Tuition.");
+    printCenteredText("5.Set Tuition to Student.");
+    printCenteredText("6.Return Back.");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+void sarmsUI::printAdminClassManagement(){
+    printBorder();
+    printEmptyLine();
+    printCenteredText("1.Manage Class.");
+    printCenteredText("2.Manage Class Schedule.");
+    printCenteredText("5.Return Back.");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+void sarmsUI::printAdminManageClass(){
+    printBorder();
+    printEmptyLine();
+    printCenteredText("1.Add Class.");
+    printCenteredText("2.Retrieve All Class.");
+    printCenteredText("3.Update Class.");
+    printCenteredText("4.Delete Class.");
+    printCenteredText("5.Set Student to Class.");
+    printCenteredText("6.Return Back.");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+void sarmsUI::printAdminManageClassSchedule(){
+    printBorder();
+    printEmptyLine();
+    printCenteredText("1.Add Schedule.");
+    printCenteredText("2.Retrieve All Schedule.");
+    printCenteredText("3.Update Schedule.");
+    printCenteredText("4.Delete Schedule.");
     printCenteredText("5.Return Back.");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();
