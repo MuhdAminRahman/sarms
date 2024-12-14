@@ -232,7 +232,7 @@ void sarmsAdmin::registerAdmin()
     cout << "\nFull name : "; getline(cin,name);
     cout << "\nPhone number : ";    getline(cin,phoneno);
 
-    cout << "\nDesignation(Admin,Finance,Teacher) : ";     getline(cin,designation);
+    cout << "\nDesignation(Admin,Finance,Teacher) : ";     getline(cin,designation); // change to number choice
     while (designation != "Admin" && designation != "Finance" && designation != "Teacher")
     {
         cout << "\nPlease type in the based on the example Admin,Finance,Teacher :";
