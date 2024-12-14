@@ -67,6 +67,7 @@ sarms::sarms()
             loginFlag = db.verifyLogin(username, password, role);
             if (loginFlag)
             {
+                ui.setUsernameAndRole(username,role);
                 if (role == "Admin")
                 {
                     sarmsAdmin admin(db,ui);
@@ -139,11 +140,11 @@ void sarms::frontPage()
 }
 
 void sarms::Login(){
-    cout << "Enter Username : ";
+    ui.printCenteredText("Enter Username : ");
     checkCin();
     getline(cin,username);
 
-    cout << "\nEnter password : ";
+    ui.printCenteredText("Enter Password : ");
     getPassword();
 }
 

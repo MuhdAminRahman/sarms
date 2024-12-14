@@ -5,17 +5,25 @@ class sarmsUI
 {
 private:
     private:
-    const int width = 200;
+    const int width = 230;
     const char cornerChar = '+';
     const char edgeChar = '=';
     const char borderChar = '|';
+    string username;
+    string userrole;
 
 public:
     sarmsUI();
     ~sarmsUI();
+    void setUsernameAndRole(const string &user,const string &role);
     void printBorder();
     void printEmptyLine();
+    void printEmptyLineNoBorder();
     void printCenteredText(const string &text);
+    void printUser();
+
+    void printProgramName();
+    void printMenuName();
 
     void printFrontPage();
     void printLoginPage();
@@ -53,18 +61,29 @@ sarmsUI::sarmsUI(){}
 
 sarmsUI::~sarmsUI(){}
 
+void sarmsUI::setUsernameAndRole(const string &user,const string &role){
+    username = user;userrole = role;
+}
+
 void sarmsUI::printBorder(){
     cout  << cornerChar << setfill(edgeChar) << setw(width - 1) << edgeChar << cornerChar << endl;
 }
 void sarmsUI::printEmptyLine(){
-    cout << borderChar << setfill(' ') << setw(width - 1) << ' ' << borderChar << endl;
+    cout  << setfill(' ') << setw(width - 1) << ' '  << endl;
+}
+void sarmsUI::printEmptyLineNoBorder(){
+    cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 }
 void sarmsUI::printCenteredText(const string &text){
-    int padding = (width - text.length() - 2) / 2; // Subtract 2 for border characters
-    cout << borderChar << setw(padding + 1) << ' ' << text << setw(padding + 1) << ' ' << borderChar << endl;
+    int padding = (width - text.length()) / 2;
+    cout  << setw(padding + 1) << ' ' << text << setw(padding + 1) << ' '  << endl;
+}
+void sarmsUI::printUser(){
+    cout << "User: " <<  username << "\n" << "Role: " << userrole << endl;
 }
 
 void sarmsUI::printFrontPage(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Login");
@@ -75,8 +94,10 @@ void sarmsUI::printFrontPage(){
 }
 
 void sarmsUI::printAdminPage(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
+    printUser();
     printCenteredText("1.User Management");
     printCenteredText("2.Subject Management");
     printCenteredText("3.Tuition Management");
@@ -88,6 +109,7 @@ void sarmsUI::printAdminPage(){
 }
 
 void sarmsUI::printAdminUserManagement(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Admin Management.");
@@ -101,6 +123,7 @@ void sarmsUI::printAdminUserManagement(){
 }
 
 void sarmsUI::printAdminManagement(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Admin Registration.");
@@ -114,6 +137,7 @@ void sarmsUI::printAdminManagement(){
 }
 
 void sarmsUI::printTeacherManagement(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Teacher Registration.");
@@ -127,6 +151,7 @@ void sarmsUI::printTeacherManagement(){
 }
 
 void sarmsUI::printParentManagement(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Parent Registration.");
@@ -140,6 +165,7 @@ void sarmsUI::printParentManagement(){
 }
 
 void sarmsUI::printStudentManagement(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Student Registration.");
@@ -154,6 +180,7 @@ void sarmsUI::printStudentManagement(){
 }
 
 void sarmsUI::printAdminSubjectManagement(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Add Subject.");
@@ -168,6 +195,7 @@ void sarmsUI::printAdminSubjectManagement(){
 }
 
 void sarmsUI::printAdminTuitionManagement(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Add Tuition.");
@@ -182,6 +210,7 @@ void sarmsUI::printAdminTuitionManagement(){
 }
 
 void sarmsUI::printAdminClassManagement(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Manage Class.");
@@ -193,6 +222,7 @@ void sarmsUI::printAdminClassManagement(){
 }
 
 void sarmsUI::printAdminManageClass(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Add Class.");
@@ -207,6 +237,7 @@ void sarmsUI::printAdminManageClass(){
 }
 
 void sarmsUI::printAdminManageClassSchedule(){
+    printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
     printCenteredText("1.Add Schedule.");
