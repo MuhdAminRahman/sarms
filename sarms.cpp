@@ -7,3 +7,7 @@ int main()
     sarms main;
     return 0;
 }
+
+
+
+///student registration by staff (add new staff module 

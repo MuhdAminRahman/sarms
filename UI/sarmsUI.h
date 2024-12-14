@@ -116,7 +116,7 @@ void sarmsUI::printAdminUserManagement(){
     printCenteredText("2.Teacher Management.");
     printCenteredText("3.Parent Management.");
     printCenteredText("4.Student Management.");
-    printCenteredText("5.Return Back.");
+    printCenteredText("5.Return To Main Screen.");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();
     printBorder();
@@ -126,11 +126,11 @@ void sarmsUI::printAdminManagement(){
     printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
-    printCenteredText("1.Admin Registration.");
-    printCenteredText("2.Admin Retrieve.");
-    printCenteredText("3.Admin Update.");
-    printCenteredText("4.Admin Delete.");
-    printCenteredText("5.Return Back.");
+    printCenteredText("1.Register Admin.");
+    printCenteredText("2.List Admin.");
+    printCenteredText("3.Update Admin.");
+    printCenteredText("4.Delete Admin.");
+    printCenteredText("5.Return To Main Screen.");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();
     printBorder();
@@ -144,7 +144,7 @@ void sarmsUI::printTeacherManagement(){
     printCenteredText("2.Teacher Retrieve.");
     printCenteredText("3.Teacher Update.");
     printCenteredText("4.Teacher Delete.");
-    printCenteredText("5.Return Back.");
+    printCenteredText("5.Return To Main Screen.");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();
     printBorder();
@@ -158,7 +158,7 @@ void sarmsUI::printParentManagement(){
     printCenteredText("2.Parent Retrieve.");
     printCenteredText("3.Parent Update.");
     printCenteredText("4.Parent Delete.");
-    printCenteredText("5.Return Back.");
+    printCenteredText("5.Return To Main Screen.");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();
     printBorder();
