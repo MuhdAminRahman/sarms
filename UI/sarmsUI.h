@@ -4,7 +4,6 @@
 class sarmsUI
 {
 private:
-    private:
     const int width = 230;
     const char cornerChar = '+';
     const char edgeChar = '=';
@@ -42,7 +41,6 @@ public:
     void printAdminManageClassSchedule();
 
     void printTeacherPage();
-    void printTeacherAssessment();
     void printTeacherClass();
 
     void printParentPage();
@@ -53,8 +51,8 @@ public:
     void printStudentPage();
     void printStudentAssessment();
     void printStudentClass();
-    
 };
+
 #endif
 
 sarmsUI::sarmsUI(){}
@@ -62,7 +60,7 @@ sarmsUI::sarmsUI(){}
 sarmsUI::~sarmsUI(){}
 
 void sarmsUI::setUsernameAndRole(const string &user,const string &role){
-    username = user;userrole = role;
+    username = user; userrole = role;
 }
 
 void sarmsUI::printBorder(){
@@ -79,7 +77,8 @@ void sarmsUI::printCenteredText(const string &text){
     cout  << setw(padding + 1) << ' ' << text << setw(padding + 1) << ' '  << endl;
 }
 void sarmsUI::printUser(){
-    cout << "User: " <<  username << "\n" << "Role: " << userrole << endl;
+    int padding = (width - (username.length() + userrole.length())) / 2;
+    cout << setw(padding + 1) << "User: " <<  username << "\t" << "Role: " << userrole << endl;
 }
 
 void sarmsUI::printFrontPage(){
@@ -245,6 +244,65 @@ void sarmsUI::printAdminManageClassSchedule(){
     printCenteredText("3.Update Schedule.");
     printCenteredText("4.Delete Schedule.");
     printCenteredText("5.Return Back.");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+void sarmsUI::printTeacherPage() {
+    printEmptyLineNoBorder();
+    printBorder();
+    printEmptyLine();
+    printUser();
+    printCenteredText("1. Create Assessment");
+    printCenteredText("2. Retrieve Assessments");
+    printCenteredText("3. Update Assessment");
+    printCenteredText("4. Delete Assessment");
+    printCenteredText("5. Manage Classes");
+    printCenteredText("6. Log Out");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+void sarmsUI::printTeacherClass() {
+    printEmptyLineNoBorder();
+    printBorder();
+    printEmptyLine();
+    printUser();
+    printCenteredText("1. View Class Schedule");
+    printCenteredText("2. Update Class Schedule");
+    printCenteredText("3. View Class List");
+    printCenteredText("4. Return to Previous Menu");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+
+void sarmsUI::printParentPage() {
+    printEmptyLineNoBorder();
+    printBorder();
+    printEmptyLine();
+    printUser();
+    printCenteredText("1. View Tuition Details");
+    printCenteredText("2. View Payment History");
+    printCenteredText("3. View Child's Class Schedule");
+    printCenteredText("4. View Child's Performance");
+    printCenteredText("5. Log Out");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+void sarmsUI::printStudentPage() {
+    printEmptyLineNoBorder();
+    printBorder();
+    printEmptyLine();
+    printUser();
+    printCenteredText("1. View Grades");
+    printCenteredText("2. View Class Schedule");
+    printCenteredText("3. Log Out");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();
     printBorder();

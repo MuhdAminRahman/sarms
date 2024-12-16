@@ -1,3 +1,5 @@
+#ifndef SARMS_H
+#define SARMS_H
 #include <iomanip>
 #include <string>
 #include <mysql.h>
@@ -13,9 +15,11 @@
 using namespace std;
 #include "sarmsUI.h"
 #include "sarmsDB.h"
-#include "sarmsUser.h"
 #include "sarmsAdmin.h"
-
+#include "sarmsStaff.h"
+#include "sarmsTeacher.h"
+#include "sarmsParent.h"
+#include "sarmsStudent.h"
 class sarms
 {
 private:
@@ -39,21 +43,7 @@ public:
     void Login();
     void getPassword();
 };
-
-void sarms::clearScreen()
-{
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
 #endif
-}
-
-void sarms::checkCin()
-{
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
 
 sarms::sarms()
 {
@@ -67,48 +57,74 @@ sarms::sarms()
             loginFlag = db.verifyLogin(username, password, role);
             if (loginFlag)
             {
-                ui.setUsernameAndRole(username,role);
+                ui.setUsernameAndRole(username, role);
                 if (role == "Admin")
                 {
-                    sarmsAdmin admin(db,ui);
-                    
+                    sarmsAdmin admin(db, ui);
+                    admin.manageUsers();
+                    clearScreen();
+                    loginFlag=0;
+                }
+                else if (role == "Staff")
+                {
+                    sarmsStaff staff(db, ui);
+                    staff.manageStaffTasks();
+                    clearScreen();
+                    loginFlag=0;
                 }
                 else if (role == "Teacher")
                 {
-                    // sarmsTeacher teacher;
+                    sarmsTeacher teacher(db, ui);
+                    teacher.manageTeacherTasks();
+                    clearScreen();
+                    loginFlag=0;
                 }
                 else if (role == "Parent")
                 {
-                    // sarmsParent parent;
+                    sarmsParent parent(db, ui);
+                    parent.manageParentTasks();
+                    clearScreen();
+                    loginFlag=0;
                 }
                 else if (role == "Student")
                 {
-                    // sarmsStudent student;
+                    sarmsStudent student(db, ui);
+                    student.manageStudentTasks();
+                    clearScreen();
+                    loginFlag=0;
                 }
-                clearScreen();
+                
             }
             else
             {
                 cout << "\nUser does not exist, please try logging again or contact your admin.";
                 clearScreen();
             }
-            
         } while (true);
     }
     catch(const exception& e)
     {
         cerr << e.what() << '\n';
     }
-    
-    
 }
 
-sarms::~sarms()
-{
+sarms::~sarms() {
 }
 
-void sarms::frontPage()
-{
+void sarms::clearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void sarms::checkCin() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+void sarms::frontPage() {
     try
     {
         int choice;
@@ -133,26 +149,24 @@ void sarms::frontPage()
             }
         } while (choice < 1 || choice > 2);
     }
-    catch (const exception e)
+    catch (const exception& e)
     {
         cerr << e.what() << '\n';
     }
 }
 
-void sarms::Login(){
-    ui.printCenteredText("Enter Username : ");
+void sarms::Login() {
+    ui.printCenteredText("Enter Username: ");
     checkCin();
-    getline(cin,username);
+    getline(cin, username);
 
-    ui.printCenteredText("Enter Password : ");
+    ui.printCenteredText("Enter Password: ");
     getPassword();
 }
 
-void sarms::getPassword(){
-    
+void sarms::getPassword() {
     char ch;
 #ifdef _WIN32
-    
     password = "";
     while ((ch = getch()) != '\r') { // '\r' is Enter
         password.push_back(ch);
@@ -186,5 +200,4 @@ void sarms::getPassword(){
     
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);  // Restore original terminal settings
 #endif
-
 }
