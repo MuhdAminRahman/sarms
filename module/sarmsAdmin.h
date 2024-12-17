@@ -7,40 +7,34 @@ private:
     sarmsUI* uiA;
     sarmsdb* dbA;
 public:
-    sarmsAdmin(sarmsdb &db,sarmsUI &ui);
+    sarmsAdmin(sarmsdb &db, sarmsUI &ui);
     ~sarmsAdmin();
     void checkCin();
     void clearScreen();
 
+    void MainMenu();
+
+    // User Management
+    void manageUsers();  // Manage all user roles
+
+    void chooseUserRole(string &role);
+
+    void createUser();  // Create a new user
+    void searchUser();  // Retrieve users
+    void updateUser();  // Update user details
+    void deleteUser();  // Delete a user
+
+    
     ///////////////////////////////////////////////////////////////////////
-    void manageUser();//done
-    void deleteUser();//done
-
-    void manageAdmin();
-    void registerAdmin();//done
-    void updateAdmin();
-    void deleteAdmin();//done
-
-    void manageTeacher();
-    void registerTeacher();//done
-    void updateTeacher();
-    void deleteTeacher();//done
-
-    void manageParent();
-    void registerParent();//done
-    void updateParent();
-    void deleteParent();//done
-
-    void manageStudent();
-    void registerStudent();//done
-    void updateStudent();
-    void deleteStudent();//done
-    ///////////////////////////////////////////////////////////////////////
+    //Subject Management
     void manageSubjects();
     void addSubject();
     void deleteSubject();
     void updateSubject();
+
+    
     ///////////////////////////////////////////////////////////////////////
+    //Tuition Management
     void manageTuition();
     void addTuition();
     void deleteTuition();
@@ -48,14 +42,26 @@ public:
     void setStudentTuition();
 
     ///////////////////////////////////////////////////////////////////////
+    //Class Management
     void manageClass();
-
-
 };
+
 #endif
 
-void sarmsAdmin::clearScreen()
-{
+sarmsAdmin::sarmsAdmin(sarmsdb &db, sarmsUI &ui) {
+    dbA = &db;
+    uiA = &ui;
+}
+
+sarmsAdmin::~sarmsAdmin() {
+}
+
+void sarmsAdmin::checkCin() {
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+void sarmsAdmin::clearScreen() {
 #ifdef _WIN32
     system("cls");
 #else
@@ -63,16 +69,7 @@ void sarmsAdmin::clearScreen()
 #endif
 }
 
-void sarmsAdmin::checkCin()
-{
-    cin.clear();
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-sarmsAdmin::sarmsAdmin(sarmsdb& db,sarmsUI& ui)
-{
-    uiA = new sarmsUI(ui);
-    dbA = new sarmsdb(db);
+void sarmsAdmin::MainMenu(){
     try
     {
         int choice;
@@ -81,11 +78,10 @@ sarmsAdmin::sarmsAdmin(sarmsdb& db,sarmsUI& ui)
             clearScreen();
             uiA->printAdminPage();
             cin >> choice;
-
             switch (choice)
             {
             case 1:
-                manageUser();
+                manageUsers();
                 break;
             case 2:
                 manageSubjects();
@@ -97,360 +93,172 @@ sarmsAdmin::sarmsAdmin(sarmsdb& db,sarmsUI& ui)
                 manageClass();
                 break;
             case 5:
-                //Log Out
+                //Log out
                 break;
             default:
                 cout << "Please insert the number shown above.\n";
-                break;
+                    checkCin();
+                    break;
             }
-
         } while (choice != 5);
+        
     }
-    catch (const exception e)
+    catch(const std::exception& e)
     {
-        cerr << e.what() << '\n';
-    }
-}
-
-sarmsAdmin::~sarmsAdmin()
-{
-}
-
-void sarmsAdmin::manageUser()
-{
-    try
-    {
-        int choice;
-
-        do
-        {
-            clearScreen();
-            uiA->printAdminUserManagement();
-            dbA->retrieveAllUser();
-            cin >> choice;
-            switch (choice)
-            {
-            case 1:
-                manageAdmin();
-                break;
-            case 2:
-                manageTeacher();
-                break;
-            case 3:
-                manageParent();
-                break;
-            case 4:
-                manageStudent();
-                break;
-            case 5:
-                //return to admin menu()
-                break;
-            default:
-                cout << "Please insert the number shown above.\n";
-                break;
-            }
-
-        } while (choice != 5);
-    }
-    catch (const exception e)
-    {
-        cerr << e.what() << '\n';
-    }
-}
-
-void sarmsAdmin::deleteUser(){
-    string username1;
-    string UserID;
-    cout << "\nPlease insert the username of the user you want to delete: ";
-        cin >> username1;
-        if(dbA->checkUsername(username1)){
-            dbA->retrieveUserID(username1,UserID);
-            dbA->deleteUser(UserID);
-        }
-        else{
-            cout << "\nUser doesnt exist please try again.";
-        }
-}
-
-void sarmsAdmin::manageAdmin(){
-    try
-    {
-        string continue1;
-        int choice;
-        do
-        {
-            clearScreen();
-            uiA->printAdminManagement();
-            cin >> choice;
-
-            switch (choice)
-            {
-            case 1:
-                registerAdmin();
-                break;
-            case 2:
-                dbA->retrieveAdmin();
-                cout << "\n Type in anything to continue: ";
-                cin >> continue1;
-                break;
-            case 3:
-                //update
-                break;
-            case 4:
-                deleteAdmin();
-                break;
-            case 5:
-                //return back
-                break;
-            default:
-                cout << "Please insert the number shown above.\n";
-                checkCin();
-                break;
-            }
-
-        } while (choice != 5);
-    }
-    catch (const exception e)
-    {
-        cerr << e.what() << '\n';
-    }
-}
-
-void sarmsAdmin::registerAdmin()
-{
-    string username, password;
-    string name, phoneno;
-    string designation;
-    checkCin();
-
-    cout << "Username: ";           getline(cin,username);
-    while(dbA->checkUsername(username)){
-        cout << "\nUsername is already taken please insert a new one: ";
-        getline(cin,username);
-    }
-    cout << "\nPassword : ";       getline(cin,password);
-    cout << "\nFull name : "; getline(cin,name);
-    cout << "\nPhone number : ";    getline(cin,phoneno);
-
-    cout << "\nDesignation(Admin,Finance,Teacher) : ";     getline(cin,designation); // change to number choice
-    while (designation != "Admin" && designation != "Finance" && designation != "Teacher")
-    {
-        cout << "\nPlease type in the based on the example Admin,Finance,Teacher :";
-        getline(cin,designation);
+        std::cerr << e.what() << '\n';
     }
     
-    dbA->addUser(username, password, "Admin", name, phoneno, "NULL", "NULL", designation);
 }
-
-void sarmsAdmin::deleteAdmin(){  
-    dbA->retrieveAdmin();
-    deleteUser();
-}
-
-void sarmsAdmin::manageTeacher(){
-try
-    {
-        string continue1;
+void sarmsAdmin::manageUsers() {
+    try {
         int choice;
-        do
-        {
+        do {
             clearScreen();
-            uiA->printTeacherManagement();
+            uiA->printAdminUserManagement();  // Create this function in sarmsUI to print the user management menu
             cin >> choice;
-
-            switch (choice)
-            {
-            case 1:
-                registerTeacher();
-                break;
-            case 2:
-                //retrieve
-                dbA->retrieveTeacher();
-                cout << "\n Type in anything to continue: ";
-                cin >> continue1;
-                break;
-            case 3:
-                //update
-                break;
-            case 4:
-                deleteTeacher();
-                break;
-            case 5:
-                //return back
-                break;
-            default:
-                cout << "Please insert the number shown above.\n";
-                break;
-            }
-
-        } while (choice != 5);
-    }
-    catch (const exception e)
-    {
-        cerr << e.what() << '\n';
-    }
-}
-
-void sarmsAdmin::registerTeacher(){
-    string username, password;
-    string name, phoneno;
-    string designation;
-    int choice;
-    checkCin();
-    
-    cout << "Username: ";           getline(cin,username);
-    while(dbA->checkUsername(username)){
-        cout << "\nUsername is already taken please insert a new one: ";
-        getline(cin,username);
-    }
-    cout << "\nPassword : ";        getline(cin,password);
-    cout << "\nFull name : ";       getline(cin,name);
-    cout << "\nPhone number : ";    getline(cin,phoneno);
-    dbA->addUser(username, password, "Teacher", name, phoneno, "NULL", "NULL", "Teacher");
-}
-
-void sarmsAdmin::deleteTeacher(){
-    dbA->retrieveTeacher();
-    deleteUser();
-}
-
-void sarmsAdmin::manageParent(){
-try
-    {
-        string continue1;
-        int choice;
-        do
-        {
-            clearScreen();
-            uiA->printParentManagement();
-            cin >> choice;
-
-            switch (choice)
-            {
-            case 1:
-                registerParent();
-                break;
-            case 2:
-                //retrieve
-                dbA->retrieveParent();
-                cout << "\n Type in anything to continue: ";
-                cin >> continue1;
-                break;
-            case 3:
-                //update
-                break;
-            case 4:
-                //delete
-                break;
-            case 5:
-                //return back
-                break;
-            default:
-                cout << "Please insert the number shown above.\n";
-                break;
-            }
-
-        } while (choice != 5);
-    }
-    catch (const exception e)
-    {
-        cerr << e.what() << '\n';
-    }
-}
-
-void sarmsAdmin::registerParent(){
-    string username, password;
-    string name, phoneno;
-    string designation;
-    int choice;
-    checkCin();
-    
-    cout << "Username: ";           getline(cin,username);
-    while(dbA->checkUsername(username)){
-        cout << "\nUsername is already taken please insert a new one: ";
-        getline(cin,username);
-    }
-    cout << "\nPassword : ";        getline(cin,password);
-    cout << "\nFull name : ";       getline(cin,name);
-    cout << "\nPhone number : ";    getline(cin,phoneno);
-    dbA->addUser(username, password, "Parent", name, phoneno, "NULL", "NULL", "NULL");
-}
-
-void sarmsAdmin::deleteParent(){
-    dbA->retrieveParent();
-    deleteUser();
-}
-
-void sarmsAdmin::manageStudent(){
-    try
-        {
-            int choice;
-            string continue1;
-            do
-            {
-                clearScreen();
-                uiA->printStudentManagement();
-                cin >> choice;
-
-                switch (choice)
-                {
+            switch (choice) {
                 case 1:
-                    registerStudent();
+                    createUser();
                     break;
                 case 2:
-                    //retrieve
-                    dbA->retrieveStudent();
-                    cout << "\n Type in anything to continue: ";
-                    cin >> continue1;
+                    searchUser();
                     break;
                 case 3:
-                    //update
+                    updateUser();
                     break;
                 case 4:
-                    deleteStudent();
+                    deleteUser();
                     break;
                 case 5:
-                    //set student's parent
-                    break;
-                case 6:
-                    //return back
+                    // Return to main menu
                     break;
                 default:
                     cout << "Please insert the number shown above.\n";
+                    checkCin();
                     break;
-                }
-
-            } while (choice != 6);
-        }
-        catch (const exception e)
-        {
-            cerr << e.what() << '\n';
-        }
-}
-
-void sarmsAdmin::registerStudent(){
-    string username, password;
-    string name, phoneno,dob,address;
-    string designation;
-    int choice;
-    checkCin();
-    
-    cout << "Username: ";           getline(cin,username);
-    while(dbA->checkUsername(username)){
-        cout << "\nUsername is already taken please insert a new one: ";
-        getline(cin,username);
+            }
+        } while (choice != 5);
+    } catch (const exception& e) {
+        cerr << e.what() << '\n';
     }
-    cout << "\nPassword : ";        getline(cin,password);
-    cout << "\nFull name : ";       getline(cin,name);
-    cout << "\nPhone number : ";    getline(cin,phoneno);
-    cout << "\nDate of Birth (yyyy-mm-dd) : ";    getline(cin,dob);
-    cout << "\nAddress : ";     getline(cin,address);
-    dbA->addUser(username, password, "Student", name, phoneno, dob, address,"NULL");
 }
 
-void sarmsAdmin::deleteStudent(){
-    dbA->retrieveStudent();
-    deleteUser();
+void sarmsAdmin::chooseUserRole(string &role){
+    int choice;
+    do
+    {
+        //print choice
+        clearScreen();
+        uiA->printAdminChooseRole();
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            role = "Admin";
+            break;
+        case 2:
+            role = "Staff";
+            break;
+        case 3:
+            role = "Teacher";
+            break;
+        case 4:
+            role ="Parent";
+            break;
+        case 5:
+            role = "Student";
+            break;
+        default:
+            cout << "\nError please type in the number of the role you want choose";
+            break;
+        }
+    } while (choice < 1 || choice > 5);
+    
+}
+
+void sarmsAdmin::createUser() {
+    string username, password, role, name, phoneno, dob, address, designation;
+
+    chooseUserRole(role);
+    checkCin();
+    cout << "Enter username: "; getline(cin, username);
+    while (dbA->checkUsername(username)) {
+        cout << "\nUsername is already taken, please insert a new one: ";
+        getline(cin, username);
+    }
+    cout << "\nEnter password: "; getline(cin, password);// implement secure password check
+
+    if (role == "Admin" || role == "Staff" || role == "Teacher")
+    {
+        cout << "\nEnter full name: "; getline(cin, name);
+        cout << "\nEnter phone number: "; getline(cin, phoneno);
+        designation = role;
+        dbA->addUser(username, password, role, name, phoneno, dob, address, designation);
+    }
+    else if(role =="Parent"){
+        cout << "\nEnter full name: "; getline(cin, name);
+        cout << "\nEnter phone number: "; getline(cin, phoneno);
+        //implement parent child assignment
+        dbA->addUser(username, password, role, name, phoneno, dob, address, designation);
+    }
+    else if(role == "Student"){
+        cout << "\nEnter full name: "; getline(cin, name);
+        cout << "\nEnter phone number: "; getline(cin, phoneno);
+        cout << "\nEnter date of birth (YYYY-MM-DD): "; getline(cin, dob);
+        cout << "\nEnter address: "; getline(cin, address);
+        dbA->addUser(username, password, role, name, phoneno, dob, address, designation);
+    }
+
+    
+}
+
+void sarmsAdmin::searchUser() {
+   
+
+    string username, name,role;
+
+    //search by username
+    //search by Full name
+    //search by Role
+
+    
+    
+
+
+
+}
+
+void sarmsAdmin::updateUser() {
+    string username, userID, newName, newPhone, newDob, newAddress, newRole, newDesignation;
+    checkCin();
+
+    cout << "Enter username of the user to update: "; getline(cin, username);
+    if (dbA->checkUsername(username)) {
+        dbA->retrieveUserID(username, userID);
+        cout << "\nEnter new full name: "; getline(cin, newName);
+        cout << "\nEnter new phone number: "; getline(cin, newPhone);
+        cout << "\nEnter new date of birth (YYYY-MM-DD): "; getline(cin, newDob);
+        cout << "\nEnter new address: "; getline(cin, newAddress);
+        cout << "\nEnter new role: "; getline(cin, newRole);
+        cout << "\nEnter new designation: "; getline(cin, newDesignation);
+
+        //dbA->updateUser(userID, newName, newPhone, newDob, newAddress, newRole, newDesignation);
+    } else {
+        cout << "\nUser doesn't exist, please try again.";
+    }
+}
+
+void sarmsAdmin::deleteUser() {
+    string username, userID;
+    checkCin();
+
+    cout << "Enter username of the user to delete: "; getline(cin, username);
+    if (dbA->checkUsername(username)) {
+        dbA->retrieveUserID(username, userID);
+        dbA->deleteUser(userID);
+    } else {
+        cout << "\nUser doesn't exist, please try again.";
+    }
 }
 
 void sarmsAdmin::manageSubjects(){
