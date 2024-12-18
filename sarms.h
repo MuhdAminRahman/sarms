@@ -156,10 +156,12 @@ void sarms::frontPage() {
 }
 
 void sarms::Login() {
+    clearScreen();
     ui.printCenteredText("Enter Username: ");
     checkCin();
     getline(cin, username);
 
+    clearScreen();
     ui.printCenteredText("Enter Password: ");
     getPassword();
 }

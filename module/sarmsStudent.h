@@ -81,5 +81,5 @@ void sarmsStudent::viewClassSchedule() {
     checkCin();
 
     cout << "Enter your student ID: "; getline(cin, studentID);
-    dbSt->retrieveClassSchedule(studentID);
+    //dbSt->retrieveClassSchedule(studentID);
 }

@@ -27,12 +27,18 @@ public:
     void printFrontPage();
     void printLoginPage();
 
+
+    /////////////////////////////////////////////////////////////////
+    //Admin
     void printAdminPage();
     void printAdminUserManagement();
-    void printAdminManagement();
-    void printTeacherManagement();
-    void printParentManagement();
-    void printStudentManagement();
+
+    void printAdminCreateUser();
+    void printAdminChooseRole();
+
+    void printAdminSearchUser();
+    void printAdminDeleteUser();
+
 
     void printAdminSubjectManagement();
     void printAdminTuitionManagement();
@@ -40,14 +46,25 @@ public:
     void printAdminManageClass();
     void printAdminManageClassSchedule();
 
+    /////////////////////////////////////////////////////////////////
+    //Staff
+    void printStaffPage();
+
+    /////////////////////////////////////////////////////////////////
+    //Teacher
     void printTeacherPage();
+    void printTeacherAssessment();
     void printTeacherClass();
 
+    /////////////////////////////////////////////////////////////////
+    //Parent
     void printParentPage();
     void printParentAssessmen();
     void printParentClass();
     void printParentTuition();
 
+    /////////////////////////////////////////////////////////////////
+    //Student
     void printStudentPage();
     void printStudentAssessment();
     void printStudentClass();
@@ -64,7 +81,7 @@ void sarmsUI::setUsernameAndRole(const string &user,const string &role){
 }
 
 void sarmsUI::printBorder(){
-    cout  << cornerChar << setfill(edgeChar) << setw(width - 1) << edgeChar << cornerChar << endl;
+    cout  << cornerChar << setfill(edgeChar) << setw(width - 30) << edgeChar << cornerChar << endl;
 }
 void sarmsUI::printEmptyLine(){
     cout  << setfill(' ') << setw(width - 1) << ' '  << endl;
@@ -92,6 +109,9 @@ void sarmsUI::printFrontPage(){
     printBorder();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Admin
 void sarmsUI::printAdminPage(){
     printEmptyLineNoBorder();
     printBorder();
@@ -111,69 +131,29 @@ void sarmsUI::printAdminUserManagement(){
     printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
-    printCenteredText("1.Admin Management.");
-    printCenteredText("2.Teacher Management.");
-    printCenteredText("3.Parent Management.");
-    printCenteredText("4.Student Management.");
+    printCenteredText("1.Create User.");
+    printCenteredText("2.Search User.");
+    printCenteredText("3.Update User.");
+    printCenteredText("4.Delete User.");
     printCenteredText("5.Return To Main Screen.");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();
     printBorder();
 }
 
-void sarmsUI::printAdminManagement(){
-    printEmptyLineNoBorder();
-    printBorder();
-    printEmptyLine();
-    printCenteredText("1.Register Admin.");
-    printCenteredText("2.List Admin.");
-    printCenteredText("3.Update Admin.");
-    printCenteredText("4.Delete Admin.");
-    printCenteredText("5.Return To Main Screen.");
-    printCenteredText("Please insert the number shown above to navigate to it.");
-    printEmptyLine();
-    printBorder();
-}
+void sarmsUI::printAdminCreateUser(){
 
-void sarmsUI::printTeacherManagement(){
-    printEmptyLineNoBorder();
-    printBorder();
-    printEmptyLine();
-    printCenteredText("1.Teacher Registration.");
-    printCenteredText("2.Teacher Retrieve.");
-    printCenteredText("3.Teacher Update.");
-    printCenteredText("4.Teacher Delete.");
-    printCenteredText("5.Return To Main Screen.");
-    printCenteredText("Please insert the number shown above to navigate to it.");
-    printEmptyLine();
-    printBorder();
 }
-
-void sarmsUI::printParentManagement(){
+void sarmsUI::printAdminChooseRole(){
     printEmptyLineNoBorder();
     printBorder();
     printEmptyLine();
-    printCenteredText("1.Parent Registration.");
-    printCenteredText("2.Parent Retrieve.");
-    printCenteredText("3.Parent Update.");
-    printCenteredText("4.Parent Delete.");
-    printCenteredText("5.Return To Main Screen.");
-    printCenteredText("Please insert the number shown above to navigate to it.");
-    printEmptyLine();
-    printBorder();
-}
-
-void sarmsUI::printStudentManagement(){
-    printEmptyLineNoBorder();
-    printBorder();
-    printEmptyLine();
-    printCenteredText("1.Student Registration.");
-    printCenteredText("2.Student Retrieve.");
-    printCenteredText("3.Student Update.");
-    printCenteredText("4.Student Delete.");
-    printCenteredText("5.Set Student's Parent.");
-    printCenteredText("6.Return Back.");
-    printCenteredText("Please insert the number shown above to navigate to it.");
+    printCenteredText("Please type in the number of the Role you want to choose: ");
+    printCenteredText("1.Admin");
+    printCenteredText("2.Staff");
+    printCenteredText("3.Teacher");
+    printCenteredText("4.Parent");
+    printCenteredText("5.Student");
     printEmptyLine();
     printBorder();
 }
@@ -249,6 +229,27 @@ void sarmsUI::printAdminManageClassSchedule(){
     printBorder();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Staff
+void sarmsUI::printStaffPage(){
+    printEmptyLineNoBorder();
+    printBorder();
+    printEmptyLine();
+    printUser();
+    printCenteredText("1. Task 1");
+    printCenteredText("2. Task 2");
+    printCenteredText("3. Task 3");
+    printCenteredText("4. Task 4");
+    printCenteredText("5. Log Out");
+    printCenteredText("Please insert the number shown above to navigate to it.");
+    printEmptyLine();
+    printBorder();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Teacher
 void sarmsUI::printTeacherPage() {
     printEmptyLineNoBorder();
     printBorder();
@@ -279,7 +280,9 @@ void sarmsUI::printTeacherClass() {
     printBorder();
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Parent
 void sarmsUI::printParentPage() {
     printEmptyLineNoBorder();
     printBorder();
@@ -295,6 +298,9 @@ void sarmsUI::printParentPage() {
     printBorder();
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Student
 void sarmsUI::printStudentPage() {
     printEmptyLineNoBorder();
     printBorder();

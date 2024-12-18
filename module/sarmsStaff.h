@@ -58,7 +58,7 @@ void sarmsStaff::manageStaffTasks() {
         int choice;
         do {
             clearScreen();
-            uiS->printMenuName();  // Create this function in sarmsUI to print the staff menu
+            uiS->printStaffPage();  // Create this function in sarmsUI to print the staff menu
             cin >> choice;
             switch (choice) {
                 case 1:

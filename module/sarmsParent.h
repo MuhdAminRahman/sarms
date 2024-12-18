@@ -81,7 +81,7 @@ void sarmsParent::viewTuitionDetails() {
     checkCin();
 
     cout << "Enter your child's student ID: "; getline(cin, studentID);
-    dbP->retrieveTuitionDetails();
+   //dbP->retrieveTuitionDetails();
 }
 
 void sarmsParent::viewPaymentHistory() {
@@ -89,7 +89,7 @@ void sarmsParent::viewPaymentHistory() {
     checkCin();
 
     cout << "Enter your child's student ID: "; getline(cin, studentID);
-    dbP->retrievePaymentHistory(studentID);
+    //dbP->retrievePaymentHistory(studentID);
 }
 
 void sarmsParent::viewChildSchedule() {
@@ -97,7 +97,7 @@ void sarmsParent::viewChildSchedule() {
     checkCin();
 
     cout << "Enter your child's student ID: "; getline(cin, studentID);
-    dbP->retrieveClassSchedule(studentID);
+    //dbP->retrieveClassSchedule(studentID);
 }
 
 void sarmsParent::viewChildPerformance() {
@@ -105,5 +105,5 @@ void sarmsParent::viewChildPerformance() {
     checkCin();
 
     cout << "Enter your child's student ID: "; getline(cin, studentID);
-    dbP->retrieveChildPerformance(studentID);
+    //dbP->retrieveChildPerformance(studentID);
 }
