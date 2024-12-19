@@ -2,8 +2,11 @@
 #define SARMS_H
 #include <iomanip>
 #include <string>
-#include <mysql.h>
 #include <limits>
+#include <vector>
+#include <memory>
+#include <mysql.h>
+
 
 #ifdef _WIN32
 #include <conio.h>  // Windows-specific
@@ -14,6 +17,7 @@
 
 using namespace std;
 #include "sarmsUI.h"
+#include "sarmsTable.h"
 #include "sarmsDB.h"
 #include "sarmsAdmin.h"
 #include "sarmsStaff.h"
@@ -61,7 +65,7 @@ sarms::sarms()
                 if (role == "Admin")
                 {
                     sarmsAdmin admin(db, ui);
-                    admin.manageUsers();
+                    admin.MainMenu();
                     clearScreen();
                     loginFlag=0;
                 }

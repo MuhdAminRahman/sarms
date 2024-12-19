@@ -14,6 +14,7 @@ private:
 public:
     sarmsUI();
     ~sarmsUI();
+
     void setUsernameAndRole(const string &user,const string &role);
     void printBorder();
     void printEmptyLine();
@@ -154,6 +155,18 @@ void sarmsUI::printAdminChooseRole(){
     printCenteredText("3.Teacher");
     printCenteredText("4.Parent");
     printCenteredText("5.Student");
+    printEmptyLine();
+    printBorder();
+}
+void sarmsUI::printAdminSearchUser(){
+    printEmptyLineNoBorder();
+    printBorder();
+    printEmptyLine();
+    printCenteredText("Please type in the number of the Role you want to choose: ");
+    printCenteredText("1.Search by Role");
+    printCenteredText("2.Search by Username");
+    printCenteredText("3.Search by Name");
+    printCenteredText("4.Return to Main Menu");
     printEmptyLine();
     printBorder();
 }

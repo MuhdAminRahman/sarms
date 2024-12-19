@@ -41,6 +41,8 @@ public:
     void retrieveParent();
     void retrieveStudent();
     void retrieveUserID(string &username, string &UserID);
+    void retrieveUserByRole(string &role);
+
     void deleteUser(string username);
     void updateUser(string userID, string newName, string newPhone, string newDob, string newAddress, string newRole, string newDesignation);
 
@@ -80,30 +82,11 @@ public:
     void updateGrade(string gradeID, string newGrade);
     void deleteGrade(string gradeID);
 
-    // Parent Communication
-    void sendMessageToParent(string parentID, string message);
 
     // Student Information
     void retrieveStudentInfo(string studentID);
 
-    // New Parent Communication
-    void addMessage(string parentID, string message);
-    void retrieveMessages(string parentID);
-    void deleteMessage(string messageID);
 
-    // System Configuration, Data Backup, and Recovery
-    void configureSystem();
-    void backupData();
-    void restoreData();
-
-    // Report Generation
-    void generateReports();
-
-    // Audit and Logging
-    void auditLogs();
-
-    // Notification Management
-    void manageNotifications();
 };
 
 #endif
@@ -189,7 +172,6 @@ void sarmsdb::addUser(string username, string password, string role, string name
     {
         query2 = "INSERT INTO staff(Name,PhoneNo,Designation,UserID) VALUES ('" + name + "','" + phoneno + "','" + designation + "',LAST_INSERT_ID())";
         queryDB(query2);
-        system("pause");
     }
     else if (role == "Parent")
     {
@@ -211,9 +193,6 @@ void sarmsdb::retrieveAllUser(){
     if(result)
     {
         numfields = mysql_num_fields(result);
-        cout << "+-------------------+" << endl;
-        cout << "| Username          |" << endl;
-        cout << "+-------------------+" << endl;
         while((row = mysql_fetch_row(result))){
             for(int i = 0;i<numfields;i++){
                 if(row[i]){
@@ -240,9 +219,6 @@ void sarmsdb::retrieveAdmin(){
     if(result)
     {
         numfields = mysql_num_fields(result);
-        cout << "+-------------------+" << endl;
-        cout << "| Username          |" << endl;
-        cout << "+-------------------+" << endl;
         while((row = mysql_fetch_row(result))){
             for(int i = 0;i<numfields;i++){
                 if(row[i]){
@@ -268,9 +244,6 @@ void sarmsdb::retrieveTeacher(){
     if(result)
     {
         numfields = mysql_num_fields(result);
-        cout << "+-------------------+" << endl;
-        cout << "| Username          |" << endl;
-        cout << "+-------------------+" << endl;
         while((row = mysql_fetch_row(result))){
             for(int i = 0;i<numfields;i++){
                 if(row[i]){
@@ -296,9 +269,6 @@ void sarmsdb::retrieveParent(){
     if(result)
     {
         numfields = mysql_num_fields(result);
-        cout << "+-------------------+" << endl;
-        cout << "| Username          |" << endl;
-        cout << "+-------------------+" << endl;
         while((row = mysql_fetch_row(result))){
             for(int i = 0;i<numfields;i++){
                 if(row[i]){
@@ -324,9 +294,6 @@ void sarmsdb::retrieveStudent(){
     if(result)
     {
         numfields = mysql_num_fields(result);
-        cout << "+-------------------+" << endl;
-        cout << "| Username          |" << endl;
-        cout << "+-------------------+" << endl;
         while((row = mysql_fetch_row(result))){
             for(int i = 0;i<numfields;i++){
                 if(row[i]){
@@ -354,6 +321,53 @@ void sarmsdb::retrieveUserID(string &username,string &UserID){
         UserID = row[0];
         mysql_free_result(result);
     }
+}
+
+void sarmsdb::retrieveUserByRole(string &role){
+    string query;
+    string continue1;
+    if(role == "Admin" || role == "Staff" || role == "Teacher"){
+        query = "select * from useraccounts join staff using (UserID) where role = '" + role + "'";
+    }
+    else{
+        query = "select * from useraccounts join " + role + " using (UserID) where role = '" + role + "'";
+    }
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
+    {
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
+        /*numfields = mysql_num_fields(result);
+        fields = mysql_fetch_fields(result);
+        for(int i=0; i<numfields;i++){
+            cout << fields[i].name << " ";
+        }
+        cout << endl;
+        while((row = mysql_fetch_row(result))){
+            for(int i = 0;i<numfields;i++){
+                if(row[i]){
+                    cout << "| "  << row[i] << " |";
+                }
+                else{
+                    cout << "| "  << "NULL" << " |";
+                }
+            }
+            cout << endl;
+        }*/
+        mysql_free_result(result);
+        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
+        
+    }
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
+    
 }
 
 
@@ -506,11 +520,6 @@ void sarmsdb::deleteGrade(string gradeID) {
     queryDB(query);
 }
 
-// Parent Communication
-void sarmsdb::sendMessageToParent(string parentID, string message) {
-    string query = "INSERT INTO messages (ParentID, Message) VALUES ('" + parentID + "', '" + message + "')";
-    queryDB(query);
-}
 
 // Student Information
 void sarmsdb::retrieveStudentInfo(string studentID) {
@@ -529,68 +538,4 @@ void sarmsdb::retrieveStudentInfo(string studentID) {
     } else {
         cerr << "Error retrieving data: " << mysql_error(conn) << endl;
     }
-}
-
-
-// New Parent Communication
-void sarmsdb::addMessage(string parentID, string message) {
-    string query = "INSERT INTO messages (ParentID, Message) VALUES ('" + parentID + "', '" + message + "')";
-    queryDB(query);
-}
-
-void sarmsdb::retrieveMessages(string parentID) {
-    string query = "SELECT * FROM messages WHERE ParentID = '" + parentID + "'";
-    queryDB(query);
-    result = mysql_store_result(conn);
-    if (result) {
-        numfields = mysql_num_fields(result);
-        while ((row = mysql_fetch_row(result))) {
-            for (int i = 0; i < numfields; i++) {
-                cout << row[i] << " ";
-            }
-            cout << endl;
-        }
-        mysql_free_result(result);
-    } else {
-        cerr << "Error retrieving messages: " << mysql_error(conn) << endl;
-    }
-}
-
-void sarmsdb::deleteMessage(string messageID) {
-    string query = "DELETE FROM messages WHERE MessageID = " + messageID;
-    queryDB(query);
-}
-
-// System Configuration, Data Backup, and Recovery
-void sarmsdb::configureSystem() {
-    // Implementation for configuring system settings
-    cout << "System configuration functionality coming soon!" << endl;
-}
-
-void sarmsdb::backupData() {
-    // Implementation for backing up data
-    cout << "Data backup functionality coming soon!" << endl;
-}
-
-void sarmsdb::restoreData() {
-    // Implementation for restoring data
-    cout << "Data restore functionality coming soon!" << endl;
-}
-
-// Report Generation
-void sarmsdb::generateReports() {
-    // Implementation for generating and exporting reports
-    cout << "Report generation functionality coming soon!" << endl;
-}
-
-// Audit and Logging
-void sarmsdb::auditLogs() {
-    // Implementation for monitoring system logs
-    cout << "Audit and logging functionality coming soon!" << endl;
-}
-
-// Notification Management
-void sarmsdb::manageNotifications() {
-    // Implementation for managing notifications and alerts
-    cout << "Notification management functionality coming soon!" << endl;
 }

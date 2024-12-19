@@ -20,8 +20,14 @@ public:
     void chooseUserRole(string &role);
 
     void createUser();  // Create a new user
+
     void searchUser();  // Retrieve users
+    void searchByRole(); //search user by their role
+    void searchByUsername(); //search user by their username
+    void searchByName(); //search user by their name
+
     void updateUser();  // Update user details
+
     void deleteUser();  // Delete a user
 
     
@@ -115,6 +121,7 @@ void sarmsAdmin::manageUsers() {
         do {
             clearScreen();
             uiA->printAdminUserManagement();  // Create this function in sarmsUI to print the user management menu
+            checkCin();
             cin >> choice;
             switch (choice) {
                 case 1:
@@ -214,18 +221,45 @@ void sarmsAdmin::createUser() {
 
 void sarmsAdmin::searchUser() {
    
-
     string username, name,role;
 
     //search by username
     //search by Full name
     //search by Role
+    try {
+        int choice;
+        do {
+            clearScreen();
+            uiA->printAdminSearchUser();  // Create this function in sarmsUI to print the user management menu
+            cin >> choice;
+            switch (choice) {
+                case 1:
+                    searchByRole();
+                    break;
+                case 2:
+                    //searchByUsername
+                    break;
+                case 3:
+                    //searchByFullName()
+                    break;
+                case 4:
+                    // Return to main menu
+                    break;
+                default:
+                    cout << "Please insert the number shown above.\n";
+                    checkCin();
+                    break;
+            }
+        } while (choice != 4);
+    } catch (const exception& e) {
+        cerr << e.what() << '\n';
+    }
+}
 
-    
-    
-
-
-
+void sarmsAdmin::searchByRole(){
+    string role;
+    chooseUserRole(role);
+    dbA->retrieveUserByRole(role);
 }
 
 void sarmsAdmin::updateUser() {
