@@ -99,6 +99,13 @@ void sarmsUI::printUser(){
     cout << setw(padding + 1) << "User: " <<  username << "\t" << "Role: " << userrole << endl;
 }
 
+void sarmsUI::printProgramName(){
+
+}
+void sarmsUI::printMenuName(){
+    
+}
+
 void sarmsUI::printFrontPage(){
     printEmptyLineNoBorder();
     printBorder();

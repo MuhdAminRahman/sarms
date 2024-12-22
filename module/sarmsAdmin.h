@@ -1,6 +1,13 @@
 #ifndef SARMSADMIN_H
 #define SARMSADMIN_H
 
+
+/* An Admin for Student Academic Record Management System is able to: 
+    1. access User management module for any type of USER(Admin,Staff,Teacher,Parent,Student) CRUD operations
+    2. access Subject Management Module for CRUD operatios.....cont
+    3. access Tuition Management Module for Tuition CRUD operation and assigning 
+    4. access Class Management Module for Class CRUD operations such as creating a class and assigning the teacher that handles the class
+        and are able to manage th eclass Schedule for that specific class*/
 class sarmsAdmin
 {
 private:
@@ -237,10 +244,10 @@ void sarmsAdmin::searchUser() {
                     searchByRole();
                     break;
                 case 2:
-                    //searchByUsername
+                    searchByUsername();
                     break;
                 case 3:
-                    //searchByFullName()
+                    //searchByFullName();
                     break;
                 case 4:
                     // Return to main menu
@@ -260,6 +267,17 @@ void sarmsAdmin::searchByRole(){
     string role;
     chooseUserRole(role);
     dbA->retrieveUserByRole(role);
+}
+void sarmsAdmin::searchByUsername(){
+    string username;
+    cout << "\nPlease enter the username you want to search : ";
+    checkCin();
+    getline(cin,username);
+    dbA->retrieveUserByUsername(username);
+
+}
+void sarmsAdmin::searchByName(){
+
 }
 
 void sarmsAdmin::updateUser() {

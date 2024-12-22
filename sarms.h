@@ -179,8 +179,11 @@ void sarms::getPassword() {
         cout << '*'; // Mask the input
     }
 #else
+
     struct termios oldt, newt;
-    tcgetattr(STDIN_FILENO, &oldt);  // Get current terminal settings
+    
+    // Get current terminal settings
+    tcgetattr(STDIN_FILENO, &oldt);  
     newt = oldt;
     newt.c_lflag &= ~(ECHO);  // Disable echoing of characters
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);  // Apply new settings

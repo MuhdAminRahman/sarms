@@ -42,6 +42,8 @@ public:
     void retrieveStudent();
     void retrieveUserID(string &username, string &UserID);
     void retrieveUserByRole(string &role);
+    void retrieveUserByUsername(string &username);
+    void retrieveUserByName(string &name);
 
     void deleteUser(string username);
     void updateUser(string userID, string newName, string newPhone, string newDob, string newAddress, string newRole, string newDesignation);
@@ -340,25 +342,7 @@ void sarmsdb::retrieveUserByRole(string &role){
         Printer printer;
         Resultset_dumper_base dumper(&res, &printer);
         dumper.dump_table();
-        /*numfields = mysql_num_fields(result);
-        fields = mysql_fetch_fields(result);
-        for(int i=0; i<numfields;i++){
-            cout << fields[i].name << " ";
-        }
-        cout << endl;
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| "  << row[i] << " |";
-                }
-                else{
-                    cout << "| "  << "NULL" << " |";
-                }
-            }
-            cout << endl;
-        }*/
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
         cout << "\nEnter anything to continue : ";
         cin >> continue1;
         
@@ -368,6 +352,27 @@ void sarmsdb::retrieveUserByRole(string &role){
         cerr << "Error retrieving data : " << mysql_error(conn) << endl;
     }
     
+}
+void sarmsdb::retrieveUserByUsername(string &username){
+    string role,continue1;
+    string query = "select * from useraccounts join (select role from useraccounts where Username = '"+username+"') using (UserID) where Username = '" + username + "'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
+    {
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
+        mysql_free_result(result);
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
+        
+    }
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
 }
 
 
