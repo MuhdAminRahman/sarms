@@ -247,7 +247,7 @@ void sarmsAdmin::searchUser() {
                     searchByUsername();
                     break;
                 case 3:
-                    //searchByFullName();
+                    searchByName();
                     break;
                 case 4:
                     // Return to main menu
@@ -277,7 +277,11 @@ void sarmsAdmin::searchByUsername(){
 
 }
 void sarmsAdmin::searchByName(){
-
+    string name;
+    cout << "\nPlease enter the Name you want to search : ";
+    checkCin();
+    getline(cin,name);
+    dbA->retrieveUserByName(name);
 }
 
 void sarmsAdmin::updateUser() {

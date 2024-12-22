@@ -355,7 +355,71 @@ void sarmsdb::retrieveUserByRole(string &role){
 }
 void sarmsdb::retrieveUserByUsername(string &username){
     string role,continue1;
-    string query = "select * from useraccounts join (select role from useraccounts where Username = '"+username+"') using (UserID) where Username = '" + username + "'";
+    string query = "select Role from useraccounts where Username = '" + username + "'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result){
+        row = mysql_fetch_row(result);
+        role = row[0];
+        mysql_free_result(result);
+    }
+    if(role == "Admin" || role =="Staff" || role =="Teacher"){
+        query = "select * from useraccounts join staff using (UserID) where Username = '" + username +"'";
+        queryDB(query);
+        result = mysql_store_result(conn);
+        if(result)
+        {
+            Result res(result);
+            Printer printer;
+            Resultset_dumper_base dumper(&res, &printer);
+            dumper.dump_table();
+            mysql_free_result(result);
+            cout << "\nEnter anything to continue : ";
+            cin >> continue1;
+            
+        }
+    }
+    else if(role == "Parent"){
+        query = "select * from useraccounts join parent using (UserID) where Username = '" +username +"'";
+        queryDB(query);
+        result = mysql_store_result(conn);
+        if(result)
+        {
+            Result res(result);
+            Printer printer;
+            Resultset_dumper_base dumper(&res, &printer);
+            dumper.dump_table();
+            mysql_free_result(result);
+            cout << "\nEnter anything to continue : ";
+            cin >> continue1;
+            
+        }
+    }
+    else if(role == "Student"){
+        query = "select * from useraccounts join student using (UserID) where Username = '" +username +"'";
+        queryDB(query);
+        result = mysql_store_result(conn);
+        if(result)
+        {
+            Result res(result);
+            Printer printer;
+            Resultset_dumper_base dumper(&res, &printer);
+            dumper.dump_table();
+            mysql_free_result(result);
+            cout << "\nEnter anything to continue : ";
+            cin >> continue1;
+            
+        }
+    }
+    
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
+}
+void sarmsdb::retrieveUserByName(string &name){
+    string continue1;
+    string query = "select * from staff join useraccounts using (UserID) where Name like '%" + name + "%'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
@@ -369,9 +433,33 @@ void sarmsdb::retrieveUserByUsername(string &username){
         cin >> continue1;
         
     }
-    else
+    query = "select * from parent join useraccounts using (UserID) where Name like '%" + name + "%'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
     {
-        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
+        mysql_free_result(result);
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
+        
+    }
+    query = "select * from student join useraccounts using (UserID) where Name like '%" + name + "%'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
+    {
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
+        mysql_free_result(result);
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
+        
     }
 }
 
