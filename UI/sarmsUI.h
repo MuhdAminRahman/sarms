@@ -38,6 +38,11 @@ public:
     void printAdminChooseRole();
 
     void printAdminSearchUser();
+
+    void printAdminUpdateStaff();
+    void printAdminUpdateParent();
+    void printAdminUpdateStudent();
+
     void printAdminDeleteUser();
 
 
@@ -103,7 +108,7 @@ void sarmsUI::printProgramName(){
 
 }
 void sarmsUI::printMenuName(){
-    
+
 }
 
 void sarmsUI::printFrontPage(){
@@ -177,6 +182,48 @@ void sarmsUI::printAdminSearchUser(){
     printEmptyLine();
     printBorder();
 }
+
+void sarmsUI::printAdminUpdateStaff(){
+    printBorder();
+    printEmptyLine();
+    printCenteredText("Please type in the number of the data you want to update: ");
+    printCenteredText("1.Update Username");
+    printCenteredText("2.Update Password");
+    printCenteredText("3.Update Name");
+    printCenteredText("4.Update Phone Number");
+    printCenteredText("5.Done");
+    printEmptyLine();
+    printBorder();
+}
+void sarmsUI::printAdminUpdateParent(){
+    printBorder();
+    printEmptyLine();
+    printCenteredText("Please type in the number of the data you want to update: ");
+    printCenteredText("1.Update Username");
+    printCenteredText("2.Update Password");
+    printCenteredText("3.Update Name");
+    printCenteredText("4.Update Phone Number");
+    printCenteredText("5.Done");
+    printEmptyLine();
+    printBorder();
+}
+void sarmsUI::printAdminUpdateStudent(){
+    printBorder();
+    printEmptyLine();
+    printCenteredText("Please type in the number of the data you want to update: ");
+    printCenteredText("1.Update Username");
+    printCenteredText("2.Update Password");
+    printCenteredText("3.Update Name");
+    printCenteredText("4.Update Phone Number");
+    printCenteredText("5.Update Date of Birth");
+    printCenteredText("6.Update Address");
+    printCenteredText("7.Update Parent");
+    printCenteredText("8.Done");
+    printEmptyLine();
+    printBorder();
+}
+
+
 
 void sarmsUI::printAdminSubjectManagement(){
     printEmptyLineNoBorder();

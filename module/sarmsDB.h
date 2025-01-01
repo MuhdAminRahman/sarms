@@ -25,28 +25,34 @@ private:
 public:
     sarmsdb();
     ~sarmsdb();
-    void connectdb();
-    void closedb();
-    void queryDB(string &query);
+    void connectdb();//done
+    void closedb();//done
+    void queryDB(string &query);//done
 
     // User verification
-    bool verifyLogin(string &username, string &password, string &role);
-    bool checkUsername(string &username);
+    bool verifyLogin(string &username, string &password, string &role);//done
+    bool checkUsername(string &username);//done
+    void retrieveRole(string &username,string &role);//done
 
     // Admin User Management
     void addUser(string username, string password, string role, string name, string phoneno, string dob, string address, string designation);
-    void retrieveAllUser();
-    void retrieveAdmin();
-    void retrieveTeacher();
-    void retrieveParent();
-    void retrieveStudent();
-    void retrieveUserID(string &username, string &UserID);
-    void retrieveUserByRole(string &role);
-    void retrieveUserByUsername(string &username);
-    void retrieveUserByName(string &name);
+    void retrieveAllUser();//done
+    void retrieveAdmin();//done
+    void retrieveTeacher();//done
+    void retrieveParent();//done
+    void retrieveStudent();//done
+    void retrieveUser(string & userID,string &role);
+    void retrieveUserID(string &username, string &UserID);//done
+    void retrieveUserByRole(string &role);//done
+    void retrieveUserByUsername(string &username);//done
+    void retrieveUserByName(string &name);//done
 
     void deleteUser(string username);
-    void updateUser(string userID, string newName, string newPhone, string newDob, string newAddress, string newRole, string newDesignation);
+    void updateUser(string &username,string &role,string &userID, string &newName, string &newPhone, string &newDob, string &newAddress,string &parentid);
+    void updateUseraccounts(string &userID,string &newUsername,string &newPassword);
+    void updateStaff(string &userID,string &newName, string &newPhone);
+    void updateParent(string &userID,string &newName,string &newPhone);
+    void updateStudent(string &userID,string &newName,string &newPhone, string &newDob, string &newAddress, string &parentid);
 
     // Admin Subject Management
     void addSubject(string name, string description);
@@ -164,7 +170,26 @@ bool sarmsdb::checkUsername(string &username){
     }
     return false;
 }
-
+void sarmsdb::retrieveRole(string &username, string &role){
+    string query = "select role from useraccounts where username = '" +username+"'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result){
+        if (mysql_num_rows(result)>0)
+        {
+            row = mysql_fetch_row(result);
+            role = row[0];
+            mysql_free_result(result);
+        }
+        else
+        {
+            mysql_free_result(result);
+        }
+    }
+    else{
+        cout << "\n Failed to retrieve user role.";
+    }
+}
 void sarmsdb::addUser(string username, string password, string role, string name, string phoneno, string dob, string address, string designation)
 {
     string query = "INSERT INTO useraccounts(Username,Password,Role) VALUES ('" + username + "','" + password + "','" + role + "')";
@@ -189,24 +214,19 @@ void sarmsdb::addUser(string username, string password, string role, string name
 }
 
 void sarmsdb::retrieveAllUser(){
+    string continue1;
     string query = "SELECT Username FROM useraccounts";
     queryDB(query);
     result=mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
@@ -215,24 +235,19 @@ void sarmsdb::retrieveAllUser(){
 }
 
 void sarmsdb::retrieveAdmin(){
+    string continue1;
     string query = "SELECT * FROM useraccounts JOIN staff using (UserID) where Role = 'Admin'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+       Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
@@ -240,24 +255,19 @@ void sarmsdb::retrieveAdmin(){
     }
 }
 void sarmsdb::retrieveTeacher(){
+    string continue1;
     string query = "SELECT * FROM useraccounts JOIN staff using (UserID) where Role = 'Teacher'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
@@ -265,24 +275,19 @@ void sarmsdb::retrieveTeacher(){
     }
 }
 void sarmsdb::retrieveParent(){
+    string continue1;
     string query = "SELECT * FROM useraccounts JOIN parent using (UserID) where Role = 'Parent'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+       Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
@@ -290,28 +295,34 @@ void sarmsdb::retrieveParent(){
     }
 }
 void sarmsdb::retrieveStudent(){
+    string continue1;
     string query = "SELECT * FROM useraccounts JOIN student using (UserID) where Role = 'Student'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
         cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
+}
+void sarmsdb::retrieveUser(string &userID,string &role){
+    if(role == "Admin" || role == "Teacher" || role == "Staff"){
+        string query = "select * from useraccounts join staff where UserID = '" + userID +"'";
+    }
+    if(role == "Parent"){
+        string query = "select * from useraccounts join parent where UserID = '" + userID +"'";
+    }
+    if(role == "Student"){
+        string query = "select * from useraccounts join student where UserID = '" + userID +"'";
     }
 }
 void sarmsdb::retrieveUserID(string &username,string &UserID){
@@ -463,11 +474,73 @@ void sarmsdb::retrieveUserByName(string &name){
     }
 }
 
-
 void sarmsdb::deleteUser(string UserID){
     string query = "DELETE FROM useraccounts WHERE UserID = '" + UserID + "'";
     queryDB(query);
 
+}
+void sarmsdb::updateUser(string &username,string &role,string &userID, string &newName, string &newPhone, string &newDob, string &newAddress,string &parentid){
+    string query= "select";
+
+}
+void sarmsdb::updateUseraccounts(string &userID,string &newUsername,string &newPassword){
+    string query;
+    if (newUsername.length()>0)
+    {
+        query = "update useraccounts set Username = '" +newUsername+ "' wehere UserID = " +userID;
+        queryDB(query);
+    }
+    if (newPassword.length()>0)
+    {
+        query = "update useraccounts set Password = '" +newPassword+ "' wehere UserID = " +userID;
+    }
+    
+}
+void sarmsdb::updateStaff(string &userID,string &newName, string &newPhone){
+    string query;
+    if(newName.length()>0){
+        query = "update staff set Name = '" + newName + "' where UserID = " + userID ;
+        queryDB(query);
+    }
+    if (newPhone.length()>0)
+    {
+        query = "update staff set PhoneNo = '" + newPhone + "' where UserID = " + userID ;
+        queryDB(query);
+    }
+}
+void sarmsdb::updateParent(string &userID,string &newName, string &newPhone){
+    string query;
+    if(newName.length()>0){
+        query = "update parent set Name = '" + newName + "' where UserID = " + userID;
+        queryDB(query);
+    }
+    if(newPhone.length()>0){
+        query = "update parent set Phone = '" + newPhone +"' where UserID = " + userID;
+        queryDB(query);
+    }
+}
+void sarmsdb::updateStudent(string &userID,string &newName,string &newPhone, string &newDob, string &newAddress, string &parentid){
+    string query;
+    if (newName.length()>0){
+        query = "update student set Name = '" + newName+ "' where UserID = " + userID;
+        queryDB(query);
+    }
+    if (newPhone.length()>0){
+        query = "update student set PhoneNo = '" + newPhone + "' where UserID = " + userID ;
+        queryDB(query);
+    }
+    if(newDob.length()>0){
+        query = "update student set dob = '" + newDob + "' where UserID = " + userID ;
+        queryDB(query);
+    }
+    if(newAddress.length()>0){
+        query = "update student set Address = '" + newAddress + "' where UserID = " + userID ;
+        queryDB(query);
+    }
+    if(parentid.length()>0){
+        query = "update student set ParentID = '" + newAddress + "' where UserID = " + userID ;
+        queryDB(query);
+    }
 }
 
 //Subject Management
