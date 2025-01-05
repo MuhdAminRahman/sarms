@@ -26,12 +26,12 @@ public:
 
     void chooseUserRole(string &role);
 
-    void createUser();  // Create a new user
+    void createUser();  // done
 
-    void searchUser();  // Retrieve users
-    void searchByRole(); //search user by their role
-    void searchByUsername(); //search user by their username
-    void searchByName(); //search user by their name
+    void searchUser();  // done
+    void searchByRole(); //done
+    void searchByUsername(); //done
+    void searchByName(); //done
 
     void updateUser();  // Update user details
 
@@ -319,15 +319,122 @@ void sarmsAdmin::updateUser() {
     checkCin();
     getline(cin, username);
     if (dbA->checkUsername(username)) {
-        dbA->retrieveUserID(username, userID);
-        cout << "\nEnter new full name: "; getline(cin, newName);
-        cout << "\nEnter new phone number: "; getline(cin, newPhone);
-        cout << "\nEnter new date of birth (YYYY-MM-DD): "; getline(cin, newDob);
-        cout << "\nEnter new address: "; getline(cin, newAddress);
-        cout << "\nEnter new role: "; getline(cin, newRole);
-        cout << "\nEnter new designation: "; getline(cin, newDesignation);
+        dbA->retrieveRole(username,role);
+        dbA->retrieveUserID(username,userID);
+        dbA->retrieveUserByUsername(username);
+        checkCin();
 
-        //dbA->updateUser(userID, newName, newPhone, newDob, newAddress, newRole, newDesignation);
+        if(role == "Admin" || role == "Staff" || role == "Teacher"){
+            
+            do
+            {
+                uiA->printAdminUpdateStaff();
+                cin >> choice;
+                switch (choice)
+                {
+                case 1:
+                    checkCin();
+                    cout << "\nEnter new  Username: "; getline(cin, newUsername);
+                    break;
+                case 2:
+                    checkCin();
+                    cout << "\nEnter new Password: "; getline(cin, newPassword);
+                    break;
+                case 3:
+                    checkCin();
+                    cout << "\nEnter new full name: "; getline(cin, newName);
+                    break;
+                case 4:
+                    checkCin();
+                    cout << "\nEnter new phone number: "; getline(cin, newPhone);
+                    break;
+                case 5:
+                    //Done
+                    break;
+                default:
+                    checkCin();
+                    cout << "\nPlease enter the number listed.";
+                    break;
+                }
+            } while (choice != 5);
+            dbA->updateUseraccounts(userID,newUsername,newPassword);
+            dbA->updateStaff(userID,newName,newPhone);
+        }
+        else if (role == "Parent")
+        {
+            do
+            {
+                uiA->printAdminUpdateParent();
+                cin >> choice;
+                switch (choice)
+                {
+                case 1:
+                    checkCin();
+                    cout << "\nEnter new  Username: "; getline(cin, newUsername);
+                    break;
+                case 2:
+;                   checkCin();
+                    cout << "\nEnter new Password: "; getline(cin, newPassword);
+                    break;
+                case 3:
+                    checkCin();
+                    cout << "\nEnter new full name: "; getline(cin, newName);
+                    break;
+                case 4:
+                    checkCin();
+                    cout << "\nEnter new phone number: "; getline(cin, newPhone);
+                    break;
+                case 5:
+                    //Done
+                    break;
+                default:
+                    break;
+                }
+            } while (choice != 5);
+
+            dbA->updateUseraccounts(userID,newUsername,newPassword);
+            dbA->updateParent(userID,newName,newPhone);
+        }
+        else if (role == "Student")
+        {
+            do
+            {
+                uiA->printAdminUpdateStudent();
+                cin >> choice;
+                switch (choice)
+                {
+                case 1:
+                    checkCin();
+                    cout << "\nEnter new  Username: "; getline(cin, newUsername);
+                    break;
+                case 2:
+                    checkCin();
+                    cout << "\nEnter new Password: "; getline(cin, newPassword);
+                    break;
+                case 3:
+                    //
+                    break;
+                case 4:
+                    //
+                    break;
+                case 5:
+                    //
+                    break;
+                default:
+                    break;
+                }
+            } while (choice != 7);
+            
+            
+            cout << "\nEnter new full name: "; getline(cin, newName);
+            cout << "\nEnter new phone number: "; getline(cin, newPhone);
+            cout << "\nEnter new date of birth (YYYY-MM-DD): "; getline(cin, newDob);
+            cout << "\nEnter new address: "; getline(cin, newAddress);
+            //dbA->updateUser(username,role,userID,newName,newPhone,newDob,newAddress,parentid);
+        }
+        else{
+            cout << "\nUser does not have a role.";
+        }
     } else {
         cout << "\nUser doesn't exist, please try again.";
     }
