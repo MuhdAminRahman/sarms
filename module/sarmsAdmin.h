@@ -7,7 +7,7 @@
     2. access Subject Management Module for CRUD operatios.....cont
     3. access Tuition Management Module for Tuition CRUD operation and assigning 
     4. access Class Management Module for Class CRUD operations such as creating a class and assigning the teacher that handles the class
-        and are able to manage th eclass Schedule for that specific class*/
+       and are able to manage th eclass Schedule for that specific class*/
 class sarmsAdmin
 {
 private:
@@ -42,15 +42,12 @@ public:
     //Subject Management
     void manageSubjects();
     void addSubject();
-    void deleteSubject();
     void updateSubject();
 
     
     ///////////////////////////////////////////////////////////////////////
     //Tuition Management
     void manageTuition();
-    void addTuition();
-    void deleteTuition();
     void updateTuition();
     void setStudentTuition();
 
@@ -208,19 +205,48 @@ void sarmsAdmin::createUser() {
         cout << "\nEnter phone number: "; getline(cin, phoneno);
         designation = role;
         dbA->addUser(username, password, role, name, phoneno, dob, address, designation);
+        if (role == "Teacher")
+        {
+            string subjectID;
+            dbA->retrieveSubject();
+            cout << "\nEnter the Subject ID to assign to the Teacher: ";
+            checkCin();
+            getline(cin,subjectID);
+            dbA->setSubjectToTeacher(subjectID);
+
+        }
     }
     else if(role =="Parent"){
+        string studentname;
+        string studentID;
         cout << "\nEnter full name: "; getline(cin, name);
         cout << "\nEnter phone number: "; getline(cin, phoneno);
         //implement parent child assignment
         dbA->addUser(username, password, role, name, phoneno, dob, address, designation);
+        cout << "\nEnter their child's name : ";
+        getline(cin,studentname);
+        dbA->retrieveStudentByName(studentname);
+        cout << "\nEnter the StudentID of the child you want to set the parent to: ";
+        getline(cin,studentID);
+        dbA->setParentToStudent(studentID);
+        
     }
     else if(role == "Student"){
+        string studentID;
+        string classID;
         cout << "\nEnter full name: "; getline(cin, name);
         cout << "\nEnter phone number: "; getline(cin, phoneno);
         cout << "\nEnter date of birth (YYYY-MM-DD): "; getline(cin, dob);
         cout << "\nEnter address: "; getline(cin, address);
         dbA->addUser(username, password, role, name, phoneno, dob, address, designation);
+        dbA->getLastInsertID(studentID);
+        cout << "StudentID :" << studentID << endl;
+        dbA->setStudentTuition(studentID);
+        dbA->retrieveClassList();
+        cout << "\nEnter the Class ID of the class you want to assign the student to: ";
+        getline(cin,classID);
+
+        
     }
 
     
@@ -288,7 +314,10 @@ void sarmsAdmin::updateUser() {
     string username, userID, newName, newPhone, newDob, newAddress, newRole, newDesignation;
     checkCin();
 
-    cout << "Enter username of the user to update: "; getline(cin, username);
+    dbA->retrieveAllUser();
+    cout << "\nEnter username of the user to update: ";
+    checkCin();
+    getline(cin, username);
     if (dbA->checkUsername(username)) {
         dbA->retrieveUserID(username, userID);
         cout << "\nEnter new full name: "; getline(cin, newName);
@@ -370,4 +399,22 @@ void sarmsAdmin::addSubject(){
 
 void sarmsAdmin::manageTuition(){}
 
-void sarmsAdmin::manageClass(){}
+void sarmsAdmin::manageClass(){
+    try
+    {
+        int choice;
+        do
+        {
+            clearScreen();
+            dbA->retrieveClassList();
+            cout << "\n Enter the ClassID you want to manage(enter 7 to return back to previous menu): ";
+            checkCin();
+            cin >> choice;
+            
+        } while (choice != 7);
+    }
+    catch (const exception e)
+    {
+        cerr << e.what() << '\n';
+    }
+}

@@ -28,6 +28,7 @@ public:
     void connectdb();
     void closedb();
     void queryDB(string &query);
+    void getLastInsertID(string &lastinsertID);
 
     // User verification
     bool verifyLogin(string &username, string &password, string &role);
@@ -40,6 +41,7 @@ public:
     void retrieveTeacher();
     void retrieveParent();
     void retrieveStudent();
+    void retrieveStudentByName(string &name);
     void retrieveUserID(string &username, string &UserID);
     void retrieveUserByRole(string &role);
     void retrieveUserByUsername(string &username);
@@ -47,24 +49,28 @@ public:
 
     void deleteUser(string username);
     void updateUser(string userID, string newName, string newPhone, string newDob, string newAddress, string newRole, string newDesignation);
-
+    void setParentToStudent(string &studentID);
     // Admin Subject Management
     void addSubject(string name, string description);
     void retrieveSubject();
+    void retrieveSubjectID(string &subjectID);
     void deleteSubject(string subjectID);
     void updateSubject();
+    void setSubjectToTeacher(string &subjectID);
 
     // Admin Tuition Management
     void addTuitionDetails(string name, string fee);
     void retrieveTuitionDetails();
     void deleteTuitionDetails();
     void updateTuitionDetails();
+    void setStudentTuition(string &studentID);
 
     // Admin Class Management
     void addClass(string name, string StaffID);
-    void retrieveClass();
-    void deleteClass();
-    void updateClass();
+    void retrieveClassList();
+    void updateClassSchedule(string classID, string newSchedule);
+    void deleteClassSchedule(string scheduleID);
+
 
     // Teacher Assessment Management
     void addAssessment(string name, string details);
@@ -73,10 +79,8 @@ public:
     void deleteAssessment(string assessmentID);
 
     // Teacher Class Management
-    void assignStudentToClass(string studentID, string classID);
-    void retrieveClassList();
-    void updateClassSchedule(string classID, string newSchedule);
-    void deleteClassSchedule(string scheduleID);
+    void assignStudentToClass(string classID,string studentID);
+    
 
     // Teacher Grade Management
     void addGrade(string studentID, string assessmentID, string grade);
@@ -120,7 +124,13 @@ void sarmsdb::queryDB(string &query) {
     }
     if (mysql_query(conn, query.c_str())) {
         cerr << "MySQL query error: " << mysql_error(conn) << endl;
+        cout << query << endl;
+        system("PAUSE");
     }
+}
+
+void sarmsdb::getLastInsertID(string &lastinsertID){
+    lastinsertID = to_string(mysql_insert_id(conn)) ;
 }
 
 bool sarmsdb::verifyLogin(string &username, string &password, string &role)
@@ -189,24 +199,19 @@ void sarmsdb::addUser(string username, string password, string role, string name
 }
 
 void sarmsdb::retrieveAllUser(){
+    string continue1;
     string query = "SELECT Username FROM useraccounts";
     queryDB(query);
     result=mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
@@ -215,24 +220,19 @@ void sarmsdb::retrieveAllUser(){
 }
 
 void sarmsdb::retrieveAdmin(){
+    string continue1;
     string query = "SELECT * FROM useraccounts JOIN staff using (UserID) where Role = 'Admin'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
@@ -240,24 +240,19 @@ void sarmsdb::retrieveAdmin(){
     }
 }
 void sarmsdb::retrieveTeacher(){
+    string continue1;
     string query = "SELECT * FROM useraccounts JOIN staff using (UserID) where Role = 'Teacher'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
@@ -265,24 +260,19 @@ void sarmsdb::retrieveTeacher(){
     }
 }
 void sarmsdb::retrieveParent(){
+    string continue1;
     string query = "SELECT * FROM useraccounts JOIN parent using (UserID) where Role = 'Parent'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
@@ -290,30 +280,40 @@ void sarmsdb::retrieveParent(){
     }
 }
 void sarmsdb::retrieveStudent(){
+    string continue1;
     string query = "SELECT * FROM useraccounts JOIN student using (UserID) where Role = 'Student'";
     queryDB(query);
     result = mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
         cerr << "Error retrieving data : " << mysql_error(conn) << endl;
     }
 }
+
+void sarmsdb::retrieveStudentByName(string &name){
+    string query = "select * from student join useraccounts using (UserID) where Name like '%" + name + "%'";
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result)
+    {
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
+        mysql_free_result(result);
+    }
+}
+
 void sarmsdb::retrieveUserID(string &username,string &UserID){
     string query = "select UserID from useraccounts where Username = '" + username +"'";
     queryDB(query);
@@ -470,68 +470,99 @@ void sarmsdb::deleteUser(string UserID){
 
 }
 
+void sarmsdb::updateUser(string userID, string newName, string newPhone, string newDob, string newAddress, string newRole, string newDesignation){
+    string query;
+    
+    
+}
+
+void sarmsdb::setParentToStudent(string &studentID){
+    string query = "update student set ParentID where StudentID = " + studentID;
+    queryDB(query);
+}
 //Subject Management
 void sarmsdb::addSubject(string name,string description){
     string query = "INSERT INTO subject(Name,Description) VALUES ('" + name + "','"+ description+"')";
     queryDB(query);
 }
 void sarmsdb::retrieveSubject(){
+    string continue1;
     string query = "SELECT * FROM subject";
     queryDB(query);
     result=mysql_store_result(conn);
     if(result)
     {
-        numfields = mysql_num_fields(result);
-        while((row = mysql_fetch_row(result))){
-            for(int i = 0;i<numfields;i++){
-                if(row[i]){
-                    cout << "| " << setw(17) << i+1 <<". " << row[i] << " |" << endl;
-                }
-                else{
-                    cout << "| " << setw(17)  << "NULL" << " |" << endl;
-                }
-            }
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-        cout << "+-------------------+" << endl;
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
     }
     else
     {
         cerr << "Error retrieving data : " << mysql_error(conn) << endl;
     }
 }
+
+//implement soft delete
 void sarmsdb::deleteSubject(string subjectID){
     string query = "DELETE FROM subject WHERE SubjectID = '" + subjectID + "'";
     queryDB(query);
 }
 
-//Tuition Management
-void sarmsdb::addTuitionDetails(string name,string fee){
-    string query = "INSERT INTO tuitiondetails(Name,Fee) VALUES ('" + name + "','"+ fee+"')";
+void sarmsdb::setSubjectToTeacher(string &subjectID){
+    string query = "insert into subjectbridge(staffID,subjectID) values (LAST_INSERT_ID(),"+ subjectID +")";
     queryDB(query);
 }
 
+//Tuition Management
+void sarmsdb::addTuitionDetails(string name,string fee){
+    string query = "INSERT INTO tuitiondetails(Name,Fee) values ('" + name + "','"+ fee+"')";
+    queryDB(query);
+}
+
+void sarmsdb::setStudentTuition(string &studentID){
+    string query = "insert into tuition(Name,Description,StudentID) values ('"+ studentID +" Tuition','Tuition for student "+studentID+"'," + studentID + ")";
+    queryDB(query);
+    string tuitionID;
+    getLastInsertID(tuitionID);
+    query = "insert into tuitionbridge(TuitionID,TuitionDetailsID) values ("+tuitionID+",1)";
+    queryDB(query);
+    query = "insert into tuitionbridge(TuitionID,TuitionDetailsID) values ("+tuitionID+",2)";
+    queryDB(query);
+    query = "insert into tuitionbridge(TuitionID,TuitionDetailsID) values ("+tuitionID+",3)";
+    queryDB(query);
+    query = "insert into tuitionbridge(TuitionID,TuitionDetailsID) values ("+tuitionID+",4)";
+    queryDB(query);
+    query = "insert into tuitionbridge(TuitionID,TuitionDetailsID) values ("+tuitionID+",5)";
+    queryDB(query);
+}
 // Teacher Assessment Management
 void sarmsdb::addAssessment(string name, string details) {
-    string query = "INSERT INTO assessments (Name, Details) VALUES ('" + name + "', '" + details + "')";
+    string query = "insert into assessments (Name, Details) values ('" + name + "', '" + details + "')";
     queryDB(query);
 }
 
 void sarmsdb::retrieveAssessments() {
+    string continue1;
     string query = "SELECT * FROM assessments";
     queryDB(query);
     result = mysql_store_result(conn);
     if (result) {
-        numfields = mysql_num_fields(result);
-        while ((row = mysql_fetch_row(result))) {
-            for (int i = 0; i < numfields; i++) {
-                cout << row[i] << " ";
-            }
-            cout << endl;
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-    } else {
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
         cerr << "Error retrieving data: " << mysql_error(conn) << endl;
+    }
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
     }
 }
 
@@ -546,25 +577,23 @@ void sarmsdb::deleteAssessment(string assessmentID) {
 }
 
 // Teacher Class Management
-void sarmsdb::assignStudentToClass(string studentID, string classID) {
-    string query = "INSERT INTO class_assignments (StudentID, ClassID) VALUES ('" + studentID + "', '" + classID + "')";
+void sarmsdb::assignStudentToClass(string classID,string studentID) {
+    string query = "INSERT INTO class_assignments (ClassID, StudentID) VALUES (" + classID + "," + studentID +")";
     queryDB(query);
 }
 
 void sarmsdb::retrieveClassList() {
-    string query = "SELECT * FROM class_assignments";
+    string query = "SELECT * FROM class";
     queryDB(query);
     result = mysql_store_result(conn);
     if (result) {
-        numfields = mysql_num_fields(result);
-        while ((row = mysql_fetch_row(result))) {
-            for (int i = 0; i < numfields; i++) {
-                cout << row[i] << " ";
-            }
-            cout << endl;
-        }
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
         mysql_free_result(result);
-    } else {
+    } 
+    else {
         cerr << "Error retrieving data: " << mysql_error(conn) << endl;
     }
 }

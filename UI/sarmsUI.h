@@ -257,10 +257,10 @@ void sarmsUI::printStaffPage(){
     printBorder();
     printEmptyLine();
     printUser();
-    printCenteredText("1. Task 1");
-    printCenteredText("2. Task 2");
-    printCenteredText("3. Task 3");
-    printCenteredText("4. Task 4");
+    printCenteredText("1. Manage Staffs");
+    printCenteredText("2. Manage Teachers");
+    printCenteredText("3. Manage Students");
+    printCenteredText("4. Manage Class");
     printCenteredText("5. Log Out");
     printCenteredText("Please insert the number shown above to navigate to it.");
     printEmptyLine();

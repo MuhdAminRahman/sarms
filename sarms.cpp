@@ -10,4 +10,3 @@ int main()
 
 
 
-///student registration by staff (add new staff module 

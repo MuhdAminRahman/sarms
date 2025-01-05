@@ -161,12 +161,22 @@ void sarms::frontPage() {
 
 void sarms::Login() {
     clearScreen();
+    ui.printEmptyLineNoBorder();
+    ui.printBorder();
+    ui.printEmptyLine();
     ui.printCenteredText("Enter Username: ");
+    ui.printEmptyLine();
+    ui.printBorder();
     checkCin();
     getline(cin, username);
 
     clearScreen();
+    ui.printEmptyLineNoBorder();
+    ui.printBorder();
+    ui.printEmptyLine();
     ui.printCenteredText("Enter Password: ");
+    ui.printEmptyLine();
+    ui.printBorder();
     getPassword();
 }
 
