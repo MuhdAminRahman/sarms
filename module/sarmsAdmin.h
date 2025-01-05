@@ -311,7 +311,9 @@ void sarmsAdmin::searchByName(){
 }
 
 void sarmsAdmin::updateUser() {
-    string username, userID, newName, newPhone, newDob, newAddress, newRole, newDesignation;
+    int choice;
+    string username,role;
+    string userID,newPassword, newName, newPhone, newDob, newAddress, newRole, newDesignation;
     checkCin();
 
     dbA->retrieveAllUser();
@@ -334,21 +336,17 @@ void sarmsAdmin::updateUser() {
                 {
                 case 1:
                     checkCin();
-                    cout << "\nEnter new  Username: "; getline(cin, newUsername);
+                    cout << "\nEnter new Password: "; getline(cin, newPassword);
                     break;
                 case 2:
                     checkCin();
-                    cout << "\nEnter new Password: "; getline(cin, newPassword);
+                    cout << "\nEnter new full name: "; getline(cin, newName);
                     break;
                 case 3:
                     checkCin();
-                    cout << "\nEnter new full name: "; getline(cin, newName);
-                    break;
-                case 4:
-                    checkCin();
                     cout << "\nEnter new phone number: "; getline(cin, newPhone);
                     break;
-                case 5:
+                case 4:
                     //Done
                     break;
                 default:
@@ -356,8 +354,8 @@ void sarmsAdmin::updateUser() {
                     cout << "\nPlease enter the number listed.";
                     break;
                 }
-            } while (choice != 5);
-            dbA->updateUseraccounts(userID,newUsername,newPassword);
+            } while (choice != 4);
+            dbA->updateUseraccounts(userID,newPassword);
             dbA->updateStaff(userID,newName,newPhone);
         }
         else if (role == "Parent")
@@ -369,30 +367,27 @@ void sarmsAdmin::updateUser() {
                 switch (choice)
                 {
                 case 1:
-                    checkCin();
-                    cout << "\nEnter new  Username: "; getline(cin, newUsername);
-                    break;
-                case 2:
 ;                   checkCin();
                     cout << "\nEnter new Password: "; getline(cin, newPassword);
                     break;
-                case 3:
+                case 2:
                     checkCin();
                     cout << "\nEnter new full name: "; getline(cin, newName);
                     break;
-                case 4:
+                case 3:
                     checkCin();
                     cout << "\nEnter new phone number: "; getline(cin, newPhone);
                     break;
-                case 5:
-                    //Done
+                case 4:
+                    checkCin();
+                    cout << "\nPlease enter the number listed.";
                     break;
                 default:
                     break;
                 }
-            } while (choice != 5);
+            } while (choice != 4);
 
-            dbA->updateUseraccounts(userID,newUsername,newPassword);
+            dbA->updateUseraccounts(userID,newPassword);
             dbA->updateParent(userID,newName,newPhone);
         }
         else if (role == "Student")
@@ -405,32 +400,30 @@ void sarmsAdmin::updateUser() {
                 {
                 case 1:
                     checkCin();
-                    cout << "\nEnter new  Username: "; getline(cin, newUsername);
+                    cout << "\nEnter new Password: "; getline(cin, newPassword);
                     break;
                 case 2:
                     checkCin();
-                    cout << "\nEnter new Password: "; getline(cin, newPassword);
+                    cout << "\nEnter new full name: "; getline(cin, newName);
                     break;
                 case 3:
-                    //
+                    checkCin();
+                    cout << "\nEnter new phone number: "; getline(cin, newPhone);
                     break;
                 case 4:
-                    //
+                    checkCin();
+                    cout << "\nEnter new date of birth (YYYY-MM-DD): "; getline(cin, newDob);
                     break;
                 case 5:
-                    //
-                    break;
+                    checkCin();
+                    cout << "\nEnter new address: "; getline(cin, newAddress);
+                    break;  
                 default:
                     break;
                 }
             } while (choice != 7);
-            
-            
-            cout << "\nEnter new full name: "; getline(cin, newName);
-            cout << "\nEnter new phone number: "; getline(cin, newPhone);
-            cout << "\nEnter new date of birth (YYYY-MM-DD): "; getline(cin, newDob);
-            cout << "\nEnter new address: "; getline(cin, newAddress);
-            //dbA->updateUser(username,role,userID,newName,newPhone,newDob,newAddress,parentid);
+            dbA->updateUseraccounts(userID,newPassword);
+            dbA->updateStudent(userID,newName,newPhone,newDob,newAddress);
         }
         else{
             cout << "\nUser does not have a role.";

@@ -187,11 +187,10 @@ void sarmsUI::printAdminUpdateStaff(){
     printBorder();
     printEmptyLine();
     printCenteredText("Please type in the number of the data you want to update: ");
-    printCenteredText("1.Update Username");
-    printCenteredText("2.Update Password");
-    printCenteredText("3.Update Name");
-    printCenteredText("4.Update Phone Number");
-    printCenteredText("5.Done");
+    printCenteredText("1.Update Password");
+    printCenteredText("2.Update Name");
+    printCenteredText("3.Update Phone Number");
+    printCenteredText("4.Done");
     printEmptyLine();
     printBorder();
 }
@@ -199,11 +198,10 @@ void sarmsUI::printAdminUpdateParent(){
     printBorder();
     printEmptyLine();
     printCenteredText("Please type in the number of the data you want to update: ");
-    printCenteredText("1.Update Username");
-    printCenteredText("2.Update Password");
-    printCenteredText("3.Update Name");
-    printCenteredText("4.Update Phone Number");
-    printCenteredText("5.Done");
+    printCenteredText("1.Update Password");
+    printCenteredText("2.Update Name");
+    printCenteredText("3.Update Phone Number");
+    printCenteredText("4.Done");
     printEmptyLine();
     printBorder();
 }
@@ -211,14 +209,13 @@ void sarmsUI::printAdminUpdateStudent(){
     printBorder();
     printEmptyLine();
     printCenteredText("Please type in the number of the data you want to update: ");
-    printCenteredText("1.Update Username");
-    printCenteredText("2.Update Password");
-    printCenteredText("3.Update Name");
-    printCenteredText("4.Update Phone Number");
-    printCenteredText("5.Update Date of Birth");
-    printCenteredText("6.Update Address");
-    printCenteredText("7.Update Parent");
-    printCenteredText("8.Done");
+    printCenteredText("1.Update Password");
+    printCenteredText("2.Update Name");
+    printCenteredText("3.Update Phone Number");
+    printCenteredText("4.Update Date of Birth");
+    printCenteredText("5.Update Address");
+    printCenteredText("6.Update Parent");
+    printCenteredText("7.Done");
     printEmptyLine();
     printBorder();
 }

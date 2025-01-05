@@ -29,9 +29,6 @@ public:
     void closedb();
     void queryDB(string &query);
     void getLastInsertID(string &lastinsertID);
-    void connectdb();//done
-    void closedb();//done
-    void queryDB(string &query);//done
 
     // User verification
     bool verifyLogin(string &username, string &password, string &role);//done
@@ -50,25 +47,18 @@ public:
     void retrieveUserByRole(string &role);
     void retrieveUserByUsername(string &username);
     void retrieveUserByName(string &name);
-    void retrieveAllUser();//done
-    void retrieveAdmin();//done
-    void retrieveTeacher();//done
-    void retrieveParent();//done
-    void retrieveStudent();//done
+
     void retrieveUser(string & userID,string &role);
-    void retrieveUserID(string &username, string &UserID);//done
-    void retrieveUserByRole(string &role);//done
-    void retrieveUserByUsername(string &username);//done
-    void retrieveUserByName(string &name);//done
+
 
     void deleteUser(string username);
     void updateUser(string userID, string newName, string newPhone, string newDob, string newAddress, string newRole, string newDesignation);
     void setParentToStudent(string &studentID);
     void updateUser(string &username,string &role,string &userID, string &newName, string &newPhone, string &newDob, string &newAddress,string &parentid);
-    void updateUseraccounts(string &userID,string &newUsername,string &newPassword);
+    void updateUseraccounts(string &userID,string &newPassword);
     void updateStaff(string &userID,string &newName, string &newPhone);
     void updateParent(string &userID,string &newName,string &newPhone);
-    void updateStudent(string &userID,string &newName,string &newPhone, string &newDob, string &newAddress, string &parentid);
+    void updateStudent(string &userID,string &newName,string &newPhone, string &newDob, string &newAddress);
 
     // Admin Subject Management
     void addSubject(string name, string description);
@@ -269,10 +259,6 @@ void sarmsdb::retrieveAdmin(){
         Printer printer;
         Resultset_dumper_base dumper(&res, &printer);
         dumper.dump_table();
-       Result res(result);
-        Printer printer;
-        Resultset_dumper_base dumper(&res, &printer);
-        dumper.dump_table();
         mysql_free_result(result);
         cout << "\nEnter anything to continue : ";
         cin >> continue1;
@@ -310,10 +296,6 @@ void sarmsdb::retrieveParent(){
     if(result)
     {
         Result res(result);
-        Printer printer;
-        Resultset_dumper_base dumper(&res, &printer);
-        dumper.dump_table();
-       Result res(result);
         Printer printer;
         Resultset_dumper_base dumper(&res, &printer);
         dumper.dump_table();
@@ -530,13 +512,8 @@ void sarmsdb::updateUser(string &username,string &role,string &userID, string &n
     string query= "select";
 
 }
-void sarmsdb::updateUseraccounts(string &userID,string &newUsername,string &newPassword){
+void sarmsdb::updateUseraccounts(string &userID,string &newPassword){
     string query;
-    if (newUsername.length()>0)
-    {
-        query = "update useraccounts set Username = '" +newUsername+ "' wehere UserID = " +userID;
-        queryDB(query);
-    }
     if (newPassword.length()>0)
     {
         query = "update useraccounts set Password = '" +newPassword+ "' wehere UserID = " +userID;
@@ -566,7 +543,7 @@ void sarmsdb::updateParent(string &userID,string &newName, string &newPhone){
         queryDB(query);
     }
 }
-void sarmsdb::updateStudent(string &userID,string &newName,string &newPhone, string &newDob, string &newAddress, string &parentid){
+void sarmsdb::updateStudent(string &userID,string &newName,string &newPhone, string &newDob, string &newAddress){
     string query;
     if (newName.length()>0){
         query = "update student set Name = '" + newName+ "' where UserID = " + userID;
@@ -582,10 +559,6 @@ void sarmsdb::updateStudent(string &userID,string &newName,string &newPhone, str
     }
     if(newAddress.length()>0){
         query = "update student set Address = '" + newAddress + "' where UserID = " + userID ;
-        queryDB(query);
-    }
-    if(parentid.length()>0){
-        query = "update student set ParentID = '" + newAddress + "' where UserID = " + userID ;
         queryDB(query);
     }
 }
