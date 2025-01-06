@@ -53,7 +53,9 @@ public:
 
     ///////////////////////////////////////////////////////////////////////
     //Class Management
+    void ClassManagement();
     void manageClass();
+    void manageClassSchedule();
 };
 
 #endif
@@ -100,7 +102,7 @@ void sarmsAdmin::MainMenu(){
                 manageTuition();
                 break;
             case 4:
-                manageClass();
+                ClassManagement();
                 break;
             case 5:
                 //Log out
@@ -245,11 +247,8 @@ void sarmsAdmin::createUser() {
         dbA->retrieveClassList();
         cout << "\nEnter the Class ID of the class you want to assign the student to: ";
         getline(cin,classID);
-
-        
+        dbA->assignStudentToClass(classID,studentID);
     }
-
-    
 }
 
 void sarmsAdmin::searchUser() {
@@ -497,7 +496,60 @@ void sarmsAdmin::addSubject(){
     dbA->addSubject(name,description);
 }
 
-void sarmsAdmin::manageTuition(){}
+void sarmsAdmin::manageTuition(){
+    try
+    {
+        int choice;
+        string studentID;
+        do
+        {
+            clearScreen();
+            dbA->retrieveStudent();
+            cout << "\n Enter the StudentID of the Student you want to manage: ";
+            checkCin();
+            getline(cin,studentID);
+            dbA->retrieveTuitionDetails(studentID);
+            checkCin();
+            cin >> choice;
+            
+        } while (choice != 7);
+    }
+    catch (const exception e)
+    {
+        cerr << e.what() << '\n';
+    }
+}
+
+void sarmsAdmin::ClassManagement(){
+    try
+    {
+        int choice;
+        string classID;
+        do
+        {
+            clearScreen();
+            uiA->printAdminClassManagement();
+            checkCin();
+            cin >> choice;
+            switch (choice)
+            {
+            case 1:
+                manageClass();
+                break;
+            case 2:
+                manageClassSchedule();
+                break;
+            default:
+                cout << "Please insert the number shown above.\n";
+                break;
+            }
+        } while (choice != 3);
+    }
+    catch (const exception e)
+    {
+        cerr << e.what() << '\n';
+    }
+}
 
 void sarmsAdmin::manageClass(){
     try
@@ -506,12 +558,77 @@ void sarmsAdmin::manageClass(){
         do
         {
             clearScreen();
+            uiA->printAdminManageClass();
+            cin >> choice;
+            switch (choice)
+            {
+            case 1:
+                //Add Class
+                break;
+            case 2:
+                //Retrieve All Class
+                break;
+            case 3:
+                //Update Class
+                break;
+            case 4:
+                //Delete Class
+                break;
+            case 5:
+                //Set Student to Class
+                break;
+            case 6:
+                //Return Back
+                break;
+            default:
+                cout << "Please insert the number shown above.\n";
+                break;
+            }
+        } while (choice != 6);
+    }
+    catch (const exception e)
+    {
+        cerr << e.what() << '\n';
+    }
+}
+
+void sarmsAdmin::manageClassSchedule(){
+    try
+    {
+        int choice;
+        string classID;
+        do
+        {
+            clearScreen();
             dbA->retrieveClassList();
             cout << "\n Enter the ClassID you want to manage(enter 7 to return back to previous menu): ";
             checkCin();
-            cin >> choice;
+            getline(cin,classID);
+            uiA->printAdminManageClassSchedule();
             
-        } while (choice != 7);
+            cin >> choice;
+            switch (choice)
+            {
+            case 1:
+                //Add Schedule
+                break;
+            case 2:
+                //Retrieve All Schedule
+                break;
+            case 3:
+                //Update Schedule
+                break;
+            case 4:
+                //Delete Schedule
+                break;
+            case 5:
+                //Return Back
+                break;
+            default:
+                cout << "Please insert the number shown above.\n";
+                break;
+            }
+        } while (choice != 5);
     }
     catch (const exception e)
     {

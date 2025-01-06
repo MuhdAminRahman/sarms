@@ -70,7 +70,7 @@ public:
 
     // Admin Tuition Management
     void addTuitionDetails(string name, string fee);
-    void retrieveTuitionDetails();
+    void retrieveTuitionDetails(string &studentID);
     void deleteTuitionDetails();
     void updateTuitionDetails();
     void setStudentTuition(string &studentID);
@@ -95,9 +95,7 @@ public:
     // Teacher Grade Management
     void addGrade(string studentID, string assessmentID, string grade);
     void retrieveGrades(string studentID);
-    void updateGrade(string gradeID, string newGrade);
-    void deleteGrade(string gradeID);
-
+    void updateGrade(string studentID, string newGrade);
 
     // Student Information
     void retrieveStudentInfo(string studentID);
@@ -616,6 +614,26 @@ void sarmsdb::addTuitionDetails(string name,string fee){
     queryDB(query);
 }
 
+void sarmsdb::retrieveTuitionDetails(string &studentID){
+    string continue1;
+    string query = "SELECT student.Name,tuition.Name,tuition.Description,tuitionbridge.PaidFlag,tuitiondetails.Name,tuitiondetails.Fee FROM student left join tuition using (StudentID) left join tuitionbridge using (TuitionID) left join tuitiondetails using (TuitionDetailsID) where StudentID = " + studentID;
+    queryDB(query);
+    result = mysql_store_result(conn);
+    if(result){
+        Result res(result);
+        Printer printer;
+        Resultset_dumper_base dumper(&res, &printer);
+        dumper.dump_table();
+        mysql_free_result(result);
+        cout << "\nEnter anything to continue : ";
+        cin >> continue1;
+    }
+    else
+    {
+        cerr << "Error retrieving data : " << mysql_error(conn) << endl;
+    }
+}
+
 void sarmsdb::setStudentTuition(string &studentID){
     string query = "insert into tuition(Name,Description,StudentID) values ('"+ studentID +" Tuition','Tuition for student "+studentID+"'," + studentID + ")";
     queryDB(query);
@@ -671,12 +689,12 @@ void sarmsdb::deleteAssessment(string assessmentID) {
 
 // Teacher Class Management
 void sarmsdb::assignStudentToClass(string classID,string studentID) {
-    string query = "INSERT INTO class_assignments (ClassID, StudentID) VALUES (" + classID + "," + studentID +")";
+    string query = "INSERT INTO classbridge (ClassID, StudentID) VALUES (" + classID + "," + studentID +")";
     queryDB(query);
 }
 
 void sarmsdb::retrieveClassList() {
-    string query = "SELECT * FROM class";
+    string query = "SELECT ClassID,Name FROM class";
     queryDB(query);
     result = mysql_store_result(conn);
     if (result) {
@@ -725,15 +743,11 @@ void sarmsdb::retrieveGrades(string studentID) {
     }
 }
 
-void sarmsdb::updateGrade(string gradeID, string newGrade) {
-    string query = "UPDATE grades SET Grade = '" + newGrade + "' WHERE GradeID = " + gradeID;
+void sarmsdb::updateGrade(string studentID, string newGrade) {
+    string query = "UPDATE assessment SET Grade = '" + newGrade + "' WHERE StudentID = " + studentID;
     queryDB(query);
 }
 
-void sarmsdb::deleteGrade(string gradeID) {
-    string query = "DELETE FROM grades WHERE GradeID = " + gradeID;
-    queryDB(query);
-}
 
 
 // Student Information
