@@ -6,22 +6,22 @@ class sarmsTeacher
 private:
     sarmsUI* uiT;
     sarmsdb* dbT;
+    string myteacherID;
 public:
     sarmsTeacher(sarmsdb &db, sarmsUI &ui);
     ~sarmsTeacher();
     void checkCin();
     void clearScreen();
 
+    void setTeacherID(string &teacherID);
+
     // Implement necessary functionalities for teachers
     void manageTeacherTasks();  // For teacher-specific tasks
-    void createAssessment();    // For creating assessments
     void retrieveAssessment();  // For retrieving assessments
-    
     void updateAssessment();    // For updating assessments
-    void deleteAssessment();    // For deleting assessments
 
     void manageClasses();       // For managing classes
-    void viewClassSchedule();
+    void viewClassSchedule(string &classID);  // For viewing class schedule
     void viewClassList();
 };
 
@@ -48,6 +48,10 @@ void sarmsTeacher::clearScreen() {
 #endif
 }
 
+void sarmsTeacher::setTeacherID(string &teacherID) {
+    myteacherID = teacherID;
+}
+
 void sarmsTeacher::manageTeacherTasks() {
     try {
         int choice;
@@ -57,21 +61,15 @@ void sarmsTeacher::manageTeacherTasks() {
             cin >> choice;
             switch (choice) {
                 case 1:
-                    createAssessment();
-                    break;
-                case 2:
                     retrieveAssessment();
                     break;
-                case 3:
+                case 2:
                     updateAssessment();
                     break;
-                case 4:
-                    deleteAssessment();
-                    break;
-                case 5:
+                case 3:
                     manageClasses();
                     break;
-                case 6:
+                case 4:
                     // Return to main menu
                     break;
                 default:
@@ -79,77 +77,67 @@ void sarmsTeacher::manageTeacherTasks() {
                     checkCin();
                     break;
             }
-        } while (choice != 6);
+        } while (choice != 4);
     } catch (const exception& e) {
         cerr << e.what() << '\n';
     }
 }
 
-void sarmsTeacher::createAssessment() {
-    string name, details;
-    checkCin();
-
-    cout << "Enter assessment name: "; getline(cin, name);
-    cout << "Enter assessment details: "; getline(cin, details);
-    
-    dbT->addAssessment(name, details);
-}
 
 void sarmsTeacher::retrieveAssessment() {
-    dbT->retrieveAssessments();
+    string studentID;
+    dbT->retrieveStudentForAssessment(myteacherID);
+    checkCin();
+    cout << "Enter student ID to retrieve assessments: "; getline(cin, studentID);
+    dbT->retrieveAssessments(studentID,myteacherID);
 }
 
 void sarmsTeacher::updateAssessment() {
-    string assessmentID, newName, newDetails;
-    checkCin();
-
-    cout << "Enter assessment ID to update: "; getline(cin, assessmentID);
-    cout << "Enter new assessment name: "; getline(cin, newName);
-    cout << "Enter new assessment details: "; getline(cin, newDetails);
-
-    dbT->updateAssessment(assessmentID, newName, newDetails);
-}
-
-void sarmsTeacher::deleteAssessment() {
-    string assessmentID;
-    checkCin();
-
-    cout << "Enter assessment ID to delete: "; getline(cin, assessmentID);
+    string studentID, staffID, subjectID,score,remarks;
     
-    dbT->deleteAssessment(assessmentID);
+    bool continue1=true;
+
+    checkCin();
+    dbT->retrieveStudentForAssessment(myteacherID);
+    cout << "\nEnter student ID to update assessment: ";
+    checkCin();
+    getline(cin, studentID);
+    cout << "\nStudent ID is: " << studentID;
+    while(continue1){
+        checkCin();
+        dbT->retrieveAssessments(studentID,myteacherID);
+        checkCin();
+        cout << "\nEnter subject ID to update assessment: "; getline(cin, subjectID);
+        cout << "\nEnter score: "; getline(cin, score);
+        cout << "\nEnter remarks: "; getline(cin, remarks);
+        dbT->updateAssessment(studentID,myteacherID,subjectID,score,remarks);
+        cout << "\nDo you want to update another subject? (1 for yes, 0 for no): "; 
+        checkCin();
+        cin >> continue1;
+    }
+    
+
 }
+
 
 void sarmsTeacher::manageClasses() {
-    int choice;
-    try {
-        do {
-            clearScreen();
-            uiT->printTeacherClass(); // Create this function in sarmsUI to print the class management menu
-            cin >> choice;
-
-            switch (choice) {
-                case 1:
-                    viewClassSchedule();
-                    break;
-                case 2:
-                    viewClassList();
-                    break;
-                case 3:
-                    // Return to previous menu
-                    break;
-                default:
-                    cout << "Please insert the number shown above.\n";
-                    checkCin();
-                    break;
-            }
-        } while (choice != 3);
-    } catch (const exception& e) {
-        cerr << e.what() << '\n';
+    bool continue1=true;
+    string classID;
+    
+    while(continue1){
+        dbT->retrieveTeacherClassList(myteacherID);
+        cout << "\nEnter class ID to view schedule: ";
+        checkCin();
+        getline(cin, classID);
+        viewClassSchedule(classID);
+        cout << "\nDo you want to manage another class? (1 for yes, 0 for no): "; 
+        checkCin();
+        cin >> continue1;
     }
 }
 
-void sarmsTeacher::viewClassSchedule() {
-    dbT->retrieveClassList();
+void sarmsTeacher::viewClassSchedule(string &classID) {
+    dbT->retrieveSubjectSchedule(classID);
 }
 
 void sarmsTeacher::viewClassList() {

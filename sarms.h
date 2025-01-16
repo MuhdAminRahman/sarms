@@ -1,6 +1,7 @@
 #ifndef SARMS_H
 #define SARMS_H
 #include <iomanip>
+#include <fstream>
 #include <string>
 #include <limits>
 #include <vector>
@@ -29,6 +30,7 @@ class sarms
 private:
     string username;
     string password;
+    string userID;
     string role;
     sarmsUI ui;
     sarmsdb db;
@@ -62,6 +64,7 @@ sarms::sarms()
             if (loginFlag)
             {
                 ui.setUsernameAndRole(username, role);
+                db.retrieveUserID(username, userID);
                 if (role == "Admin")
                 {
                     sarmsAdmin admin(db, ui);
@@ -71,28 +74,40 @@ sarms::sarms()
                 }
                 else if (role == "Staff")
                 {
+                    string staffID;
+                    staffID = db.setRoleID(userID,role);
                     sarmsStaff staff(db, ui);
+                    staff.setStaffID(staffID);
                     staff.manageStaffTasks();
                     clearScreen();
                     loginFlag=0;
                 }
                 else if (role == "Teacher")
                 {
+                    string teacherID;
+                    teacherID = db.setRoleID(userID,role);
                     sarmsTeacher teacher(db, ui);
+                    teacher.setTeacherID(teacherID);
                     teacher.manageTeacherTasks();
                     clearScreen();
                     loginFlag=0;
                 }
                 else if (role == "Parent")
                 {
+                    string parentID;
+                    parentID = db.setRoleID(userID,role);
                     sarmsParent parent(db, ui);
+                    parent.setParentID(parentID);
                     parent.manageParentTasks();
                     clearScreen();
                     loginFlag=0;
                 }
                 else if (role == "Student")
                 {
+                    string studentID;
+                    studentID = db.setRoleID(userID,role);
                     sarmsStudent student(db, ui);
+                    student.setStudentID(studentID);
                     student.manageStudentTasks();
                     clearScreen();
                     loginFlag=0;
@@ -101,7 +116,14 @@ sarms::sarms()
             }
             else
             {
-                cout << "\nUser does not exist, please try logging again or contact your admin.";
+                ui.printEmptyLineNoBorder();
+                ui.printBorder();
+                ui.printEmptyLine();
+                ui.printCenteredText("User does not exist, please try logging again or contact your admin.");
+                ui.printCenteredText("Press Enter to Continue.");
+                ui.printEmptyLine();
+                ui.printBorder();
+                cin.get();
                 clearScreen();
             }
         } while (true);

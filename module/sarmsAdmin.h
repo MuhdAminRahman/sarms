@@ -18,6 +18,7 @@ public:
     ~sarmsAdmin();
     void checkCin();
     void clearScreen();
+    
 
     void MainMenu();
 
@@ -48,14 +49,18 @@ public:
     ///////////////////////////////////////////////////////////////////////
     //Tuition Management
     void manageTuition();
-    void updateTuition();
-    void setStudentTuition();
+    void retrieveAllTuition();
 
     ///////////////////////////////////////////////////////////////////////
     //Class Management
     void ClassManagement();
     void manageClass();
+    void addClass();
+    void updateClass();
     void manageClassSchedule();
+    void addSubjectToSchedule(string &classID);
+    void updateClassSchedule(string &classID);
+    void deleteSubjectFromSchedule(string &classID);
 };
 
 #endif
@@ -109,8 +114,8 @@ void sarmsAdmin::MainMenu(){
                 break;
             default:
                 cout << "Please insert the number shown above.\n";
-                    checkCin();
-                    break;
+                checkCin();
+                break;
             }
         } while (choice != 5);
         
@@ -127,7 +132,7 @@ void sarmsAdmin::manageUsers() {
         do {
             clearScreen();
             uiA->printAdminUserManagement();  // Create this function in sarmsUI to print the user management menu
-            checkCin();
+            
             cin >> choice;
             switch (choice) {
                 case 1:
@@ -150,6 +155,7 @@ void sarmsAdmin::manageUsers() {
                     checkCin();
                     break;
             }
+            checkCin();
         } while (choice != 5);
     } catch (const exception& e) {
         cerr << e.what() << '\n';
@@ -163,6 +169,7 @@ void sarmsAdmin::chooseUserRole(string &role){
         //print choice
         clearScreen();
         uiA->printAdminChooseRole();
+        checkCin();
         cin >> choice;
         switch (choice)
         {
@@ -199,7 +206,7 @@ void sarmsAdmin::createUser() {
         cout << "\nUsername is already taken, please insert a new one: ";
         getline(cin, username);
     }
-    cout << "\nEnter password: "; getline(cin, password);// implement secure password check
+    cout << "\nEnter password: "; getline(cin, password);
 
     if (role == "Admin" || role == "Staff" || role == "Teacher")
     {
@@ -212,7 +219,6 @@ void sarmsAdmin::createUser() {
             string subjectID;
             dbA->retrieveSubject();
             cout << "\nEnter the Subject ID to assign to the Teacher: ";
-            checkCin();
             getline(cin,subjectID);
             dbA->setSubjectToTeacher(subjectID);
 
@@ -221,16 +227,18 @@ void sarmsAdmin::createUser() {
     else if(role =="Parent"){
         string studentname;
         string studentID;
+        string parentID;
         cout << "\nEnter full name: "; getline(cin, name);
         cout << "\nEnter phone number: "; getline(cin, phoneno);
         //implement parent child assignment
         dbA->addUser(username, password, role, name, phoneno, dob, address, designation);
+        dbA->getLastInsertID(parentID);
         cout << "\nEnter their child's name : ";
         getline(cin,studentname);
         dbA->retrieveStudentByName(studentname);
         cout << "\nEnter the StudentID of the child you want to set the parent to: ";
         getline(cin,studentID);
-        dbA->setParentToStudent(studentID);
+        dbA->setParentToStudent(parentID,studentID);
         
     }
     else if(role == "Student"){
@@ -248,6 +256,7 @@ void sarmsAdmin::createUser() {
         cout << "\nEnter the Class ID of the class you want to assign the student to: ";
         getline(cin,classID);
         dbA->assignStudentToClass(classID,studentID);
+        dbA->createAssessment(studentID);
     }
 }
 
@@ -263,6 +272,7 @@ void sarmsAdmin::searchUser() {
         do {
             clearScreen();
             uiA->printAdminSearchUser();  // Create this function in sarmsUI to print the user management menu
+            checkCin();
             cin >> choice;
             switch (choice) {
                 case 1:
@@ -279,7 +289,6 @@ void sarmsAdmin::searchUser() {
                     break;
                 default:
                     cout << "Please insert the number shown above.\n";
-                    checkCin();
                     break;
             }
         } while (choice != 4);
@@ -330,6 +339,7 @@ void sarmsAdmin::updateUser() {
             do
             {
                 uiA->printAdminUpdateStaff();
+                checkCin();
                 cin >> choice;
                 switch (choice)
                 {
@@ -349,7 +359,6 @@ void sarmsAdmin::updateUser() {
                     //Done
                     break;
                 default:
-                    checkCin();
                     cout << "\nPlease enter the number listed.";
                     break;
                 }
@@ -362,6 +371,7 @@ void sarmsAdmin::updateUser() {
             do
             {
                 uiA->printAdminUpdateParent();
+                checkCin();
                 cin >> choice;
                 switch (choice)
                 {
@@ -378,10 +388,10 @@ void sarmsAdmin::updateUser() {
                     cout << "\nEnter new phone number: "; getline(cin, newPhone);
                     break;
                 case 4:
-                    checkCin();
-                    cout << "\nPlease enter the number listed.";
+                    //done
                     break;
                 default:
+                    cout << "\nPlease enter the number listed.";
                     break;
                 }
             } while (choice != 4);
@@ -394,6 +404,7 @@ void sarmsAdmin::updateUser() {
             do
             {
                 uiA->printAdminUpdateStudent();
+                checkCin();
                 cin >> choice;
                 switch (choice)
                 {
@@ -416,11 +427,15 @@ void sarmsAdmin::updateUser() {
                 case 5:
                     checkCin();
                     cout << "\nEnter new address: "; getline(cin, newAddress);
-                    break;  
+                    break; 
+                case 6:
+                    //done
+                    break;
                 default:
+                    cout << "\nPlease enter the number listed.";
                     break;
                 }
-            } while (choice != 7);
+            } while (choice != 6);
             dbA->updateUseraccounts(userID,newPassword);
             dbA->updateStudent(userID,newName,newPhone,newDob,newAddress);
         }
@@ -467,12 +482,6 @@ void sarmsAdmin::manageSubjects(){
                 //deleteSubject
                 break;
             case 4:
-                //updateSubject
-                break;
-            case 5:
-                //set Subject to Teacher
-                break;
-            case 6:
                 //return back
                 break;
             default:
@@ -480,7 +489,7 @@ void sarmsAdmin::manageSubjects(){
                 break;
             }
 
-        } while (choice != 6);
+        } while (choice != 4);
     }
     catch (const exception e)
     {
@@ -504,15 +513,34 @@ void sarmsAdmin::manageTuition(){
         do
         {
             clearScreen();
-            dbA->retrieveStudent();
-            cout << "\n Enter the StudentID of the Student you want to manage: ";
-            checkCin();
-            getline(cin,studentID);
-            dbA->retrieveTuitionDetails(studentID);
+            uiA->printAdminTuitionManagement();
             checkCin();
             cin >> choice;
+            switch (choice)
+            {
+                case 1:
+                    dbA->retrieveAllTuition();
+                    cout << "\n\nList of Students with Unpaid Tuition: \n";
+                    dbA->retrieveAllUnpaidTuition();
+                    break;
+                case 2:
+                    dbA->retrieveStudent();
+                    cout << "\n Enter the StudentID of the Student you want to manage: ";
+                    checkCin();
+                    getline(cin,studentID);
+                    dbA->retrieveTuitionDetails(studentID);
+                    
+                    break;
+                case 3:
+                    //Return Back
+                    break;
+
+                default:
+                    cout << "Please insert the number shown above.\n";
+                    break;
+            }
             
-        } while (choice != 7);
+        } while (choice != 3);
     }
     catch (const exception e)
     {
@@ -539,6 +567,9 @@ void sarmsAdmin::ClassManagement(){
             case 2:
                 manageClassSchedule();
                 break;
+            case 3:
+                //Return Back
+                break;
             default:
                 cout << "Please insert the number shown above.\n";
                 break;
@@ -563,28 +594,25 @@ void sarmsAdmin::manageClass(){
             switch (choice)
             {
             case 1:
-                //Add Class
+                addClass();
                 break;
             case 2:
-                //Retrieve All Class
+                dbA->retrieveClassList();
                 break;
             case 3:
-                //Update Class
+                updateClass();
                 break;
             case 4:
                 //Delete Class
                 break;
             case 5:
-                //Set Student to Class
-                break;
-            case 6:
                 //Return Back
                 break;
             default:
                 cout << "Please insert the number shown above.\n";
                 break;
             }
-        } while (choice != 6);
+        } while (choice != 5);
     }
     catch (const exception e)
     {
@@ -592,25 +620,75 @@ void sarmsAdmin::manageClass(){
     }
 }
 
+void sarmsAdmin::addClass(){
+    string name,staffID,classScheduleID;
+    checkCin();
+    cout << "\nPlease insert the name of the Class: "; getline(cin,name);
+    cout << "\nPlease insert the StaffID of the Teacher handling the class: "; getline(cin,staffID);
+    dbA->addClassSchedule(name);
+    dbA->getLastInsertID(classScheduleID);
+    dbA->addClass(name,staffID,classScheduleID);
+}
+
+void sarmsAdmin::updateClass(){
+    
+    string classID;
+    string name,staffID,classScheduleID;
+    int choice;
+    do
+    {
+        clearScreen();
+        checkCin();
+        dbA->retrieveClassList();
+        cout << "\nPlease insert the ClassID of the Class you want to update: "; getline(cin,classID);
+        uiA->printAdminUpdateClass();
+        switch (choice)
+        {
+            case 1:
+                cout << "\nPlease insert the new name of the Class: "; getline(cin,name);
+                dbA->updateClass(classID,name,staffID);
+                dbA->getClassScheduleID(classID,classScheduleID);
+                dbA->updateClassScheduleName(classScheduleID,name);
+                break;
+            case 2:
+                dbA->retrieveTeacher();
+                cout << "\nPlease insert the new StaffID of the Teacher handling the class: "; getline(cin,staffID);
+                dbA->updateClass(classID,name,staffID);
+                break;
+            case 3:
+                break;
+            default:
+                cout << "Please insert the number shown above.\n";
+                break;
+        }
+    } while (choice != 3);
+    
+    
+}
+
 void sarmsAdmin::manageClassSchedule(){
     try
     {
         int choice;
         string classID;
+        string scheduleID;
         do
         {
             clearScreen();
             dbA->retrieveClassList();
-            cout << "\n Enter the ClassID you want to manage(enter 7 to return back to previous menu): ";
+            cout << "\n Enter the ClassID you want to manage: ";
             checkCin();
             getline(cin,classID);
+            clearScreen();
+            dbA->retrieveSubjectSchedule(classID);
+            dbA->getClassScheduleID(classID,scheduleID);
             uiA->printAdminManageClassSchedule();
             
             cin >> choice;
             switch (choice)
             {
             case 1:
-                //Add Schedule
+                addSubjectToSchedule(classID);
                 break;
             case 2:
                 //Retrieve All Schedule
@@ -634,4 +712,87 @@ void sarmsAdmin::manageClassSchedule(){
     {
         cerr << e.what() << '\n';
     }
+}
+
+void sarmsAdmin::addSubjectToSchedule(string &classID){
+    string subjectID;
+    string staffID;
+    string starttime;
+    string endtime;
+    int choice;
+    bool taken= false;
+    checkCin();
+    dbA->retrieveSubject();
+    checkCin();
+    cout << "\nPlease insert the SubjectID of the Subject you want to add to the Class: "; getline(cin,subjectID);
+    dbA->retrieveStaffTeachingSubject(subjectID);
+    checkCin();
+    cout << "\nPlease insert the StaffID of the Teacher handling the Subject: "; getline(cin,staffID);
+
+    while(taken == false){
+        uiA->printstartTimeSelection();
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            if(dbA->checkTimeSlotTaken(classID,"8:00","9:00")){
+                cout << "Time slot is taken. Please choose another time slot." << endl;
+                break;
+            }
+            starttime = "8:00";
+            endtime = "9:00";
+            taken = true;
+            break;
+        case 2:
+            if(dbA->checkTimeSlotTaken(classID,"9:00","10:00")){
+                cout << "Time slot is taken. Please choose another time slot." << endl;
+                break;
+            }
+            starttime = "9:00";
+            endtime = "10:00";
+            taken = true;
+            break;
+        case 3:
+            if(dbA->checkTimeSlotTaken(classID,"10:30","11:30")){
+                cout << "Time slot is taken. Please choose another time slot." << endl;
+                break;
+            }
+            starttime = "10:30";
+            endtime = "11:30";
+            taken = true;
+            break;
+        case 4:
+            if(dbA->checkTimeSlotTaken(classID,"11:30","12:30")){
+                cout << "Time slot is taken. Please choose another time slot." << endl;
+                break;
+            }
+            starttime = "11:30";
+            endtime = "12:30";
+            taken = true;
+            break;
+        case 5:
+            if(dbA->checkTimeSlotTaken(classID,"14:00","15:00")){
+                cout << "Time slot is taken. Please choose another time slot." << endl;
+                break;
+            }
+            starttime = "14:00";
+            endtime = "15:00";
+            taken = true;
+            break;
+        case 6:
+            if(dbA->checkTimeSlotTaken(classID,"15:00","16:00")){
+                cout << "Time slot is taken. Please choose another time slot." << endl;
+                break;
+            }
+            starttime = "15:00";
+            endtime = "16:00";
+            taken = true;
+            break;
+        
+        default:
+            cout << "Please insert the number shown above.\n";
+            break;
+        }
+    }
+    dbA->addSubjectToSchedule(classID,subjectID,staffID,starttime,endtime);
 }

@@ -51,6 +51,11 @@ public:
         }
         return nullptr;
     }
+
+    vector<Row> fetch_all()
+    {
+        return rows;
+    }
 };
 
 class Field_formatter
@@ -99,7 +104,34 @@ private:
 
 public:
     Resultset_dumper_base(Result *result, Printer *printer) : m_result(result), m_printer(printer), m_cancelled(false) {}
+    void generate_csv(const string &filename)
+    {
+        ofstream file(filename);
+        if (!file.is_open())
+        {
+            throw runtime_error("Could not open file for writing");
+        }
+        const auto &metadata = m_result->get_metadata();
+        for (const auto &column : metadata)
+        {
+            file << column.get_column_label() << ",";
+        }
+        
+        file << "\n";
 
+        auto row = m_result->fetch_all();
+        for(const auto &r : row)
+        {
+            for (size_t i = 0; i < r.data.size(); i++)
+            {
+                file << r.data[i] << ",";
+            }
+            file << "\n";
+        }
+
+        
+        file.close();
+    }
     size_t dump_table()
     {
         const auto &metadata = m_result->get_metadata();
