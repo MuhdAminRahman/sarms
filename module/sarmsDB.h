@@ -17,9 +17,8 @@ private:
     MYSQL_RES *result;
     MYSQL_FIELD *fields; // for table column name
     int numfields;
-
-    int qstate;
     bool checkflag;
+    
 
 public:
     sarmsdb();
@@ -1290,7 +1289,7 @@ void sarmsdb::makePayment(string &childID,string &tuitionID,float &amount){
 
 //Student Functions
 void sarmsdb::retrieveStudentAssessment(string &studentID) {
-    string query = "SELECT student.Name AS StudentName,subject.Name AS SubjectName,assessment.SubjectID,assessment.Score,assessment.Grade,assessment.Remarks FROM assessment join student using (StudentID) join subject using (SubjectID) WHERE StudentID = " + studentID;
+    string query = "SELECT subject.Name AS SubjectName,assessment.SubjectID,assessment.Score,assessment.Grade,assessment.Remarks FROM assessment join student using (StudentID) join subject using (SubjectID) WHERE StudentID = " + studentID;
     queryDB(query);
     result = mysql_store_result(conn);
     if (result) {
@@ -1307,7 +1306,7 @@ void sarmsdb::retrieveStudentAssessment(string &studentID) {
 }
 
 void sarmsdb::retrieveStudentClassSchedule(string &studentID) {
-    string query = "SELECT class.Name, classschedule.Name, TIME_FORMAT(subjectschedule.StartTime,'%r') AS 'StartTime', TIME_FORMAT(subjectschedule.EndTime,'%r') AS 'EndTime', subjectschedule.Duration, staff.Name AS 'Teacher', subject.Name AS Subject"
+    string query = "SELECT TIME_FORMAT(subjectschedule.StartTime,'%r') AS 'StartTime', TIME_FORMAT(subjectschedule.EndTime,'%r') AS 'EndTime', subjectschedule.Duration, staff.Name AS 'Teacher', subject.Name AS Subject"
                     " FROM class "
                     "JOIN classschedule ON class.ClassScheduleID = classschedule.ClassScheduleID "
                     "JOIN subjectschedule ON classschedule.ClassScheduleID = subjectschedule.ClassScheduleID "
@@ -1321,6 +1320,7 @@ void sarmsdb::retrieveStudentClassSchedule(string &studentID) {
         Result res(result);
         Printer printer;
         Resultset_dumper_base dumper(&res, &printer);
+        
         dumper.dump_table();
         cin.get();
         mysql_free_result(result);

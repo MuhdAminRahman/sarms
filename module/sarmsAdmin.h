@@ -218,6 +218,7 @@ void sarmsAdmin::createUser() {
         {
             string subjectID;
             dbA->retrieveSubject();
+            checkCin();
             cout << "\nEnter the Subject ID to assign to the Teacher: ";
             getline(cin,subjectID);
             dbA->setSubjectToTeacher(subjectID);

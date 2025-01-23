@@ -55,10 +55,12 @@ void sarmsStudent::manageStudentTasks() {
             switch (choice) {
                 case 1:
                     checkCin();
+                    clearScreen();
                     dbSt->retrieveStudentAssessment(mystudentID);
                     break;
                 case 2:
                     checkCin();
+                    clearScreen();
                     dbSt->retrieveStudentClassSchedule(mystudentID);
                     break;
                 case 3:
